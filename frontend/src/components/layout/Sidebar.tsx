@@ -74,30 +74,24 @@ export function Sidebar() {
 
       <aside
         className={`
+          glass-panel glass-sidebar
           flex h-dvh w-[220px] flex-shrink-0 flex-col overflow-y-auto z-[150]
           max-md:fixed max-md:top-0 max-md:bottom-0 max-md:left-0
           ${mobileOpen ? "max-md:translate-x-0 max-md:shadow-[8px_0_32px_rgba(0,0,0,0.5)]" : "max-md:-translate-x-full"}
           transition-transform duration-300
         `}
-        style={{
-          background: "rgba(15, 18, 32, 0.75)",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
-          borderRight: "1px solid rgba(139, 69, 255, 0.1)",
-        }}
       >
         {/* Logo */}
-        <div className="px-4 pt-[18px] pb-[14px]" style={{ borderBottom: "1px solid var(--border)" }}>
+        <div className="px-4 pt-[14px] pb-[12px]" style={{ borderBottom: "1px solid var(--border)" }}>
           <div className="flex items-center gap-[10px]">
-            <div
-              className="flex h-8 w-8 flex-shrink-0 items-center justify-center text-[14px] font-black text-white"
-              style={{
-                background: "linear-gradient(135deg, #00D4AA, #4A8DFF, #6B21F0, #C084FC)",
-                clipPath: "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
-              }}
-            >
-              Z
-            </div>
+            <img
+              src="/logo-tree-120.png"
+              alt="Zeni Chain"
+              width={32}
+              height={32}
+              className="flex-shrink-0 object-contain"
+              style={{ filter: "drop-shadow(0 0 6px rgba(0,212,170,0.3))" }}
+            />
             <div>
               <div className="text-[16px] font-bold" style={{ color: "var(--white)" }}>
                 Zeni<span style={{ color: "var(--c6b)" }}> Chain</span>

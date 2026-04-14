@@ -125,10 +125,10 @@ input, textarea, select { font-family: inherit; }
   margin-bottom: 16px;
 }
 [data-theme="light"] .card {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-color: rgba(107, 33, 240, 0.09);
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(107, 33, 240, 0.1);
 }
 
 .card-title {
@@ -361,8 +361,9 @@ input, textarea, select { font-family: inherit; }
   border-radius: 20px; padding: 28px; margin-bottom: 16px;
 }
 [data-theme="light"] .balance-hero {
-  background: linear-gradient(135deg, rgba(228, 225, 255, 0.85), rgba(212, 232, 255, 0.82));
-  border-color: rgba(107, 33, 240, 0.2);
+  background: linear-gradient(135deg, rgba(228, 225, 255, 0.92), rgba(212, 232, 255, 0.9)) !important;
+  border-color: rgba(107, 33, 240, 0.15);
+  backdrop-filter: blur(12px);
 }
 .balance-amount {
   font-size: 44px; font-weight: 700; color: var(--white);
@@ -386,8 +387,9 @@ input, textarea, select { font-family: inherit; }
   position: relative; overflow: hidden; margin-bottom: 14px;
 }
 [data-theme="light"] .rank-hero {
-  background: linear-gradient(160deg, #E8E0FF, #D4EAFF, #E0F8F0);
-  border-color: rgba(139, 69, 255, 0.4);
+  background: linear-gradient(160deg, #E8E0FF, #D4EAFF, #E0F8F0) !important;
+  border-color: rgba(139, 69, 255, 0.3);
+  backdrop-filter: blur(12px);
 }
 .rank-name {
   font-size: 22px; font-weight: 800;
@@ -576,6 +578,48 @@ input, textarea, select { font-family: inherit; }
 /* ═══ GLOW ═══ */
 .glow-zeni { box-shadow: 0 0 40px rgba(107, 33, 240, 0.15); }
 .glow-teal { box-shadow: 0 0 40px rgba(0, 212, 170, 0.15); }
+
+/* ═══ GLASS PANELS (sidebar/topbar) ═══ */
+.glass-panel {
+  background: rgba(15, 18, 32, 0.75) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
+[data-theme="light"] .glass-panel {
+  background: rgba(248, 250, 255, 0.96) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  color: #0A0C1E !important;
+}
+[data-theme="light"] .glass-panel .nav-icon-box {
+  background: rgba(107, 33, 240, 0.06);
+}
+
+.glass-sidebar {
+  border-right: 1px solid rgba(139, 69, 255, 0.1);
+}
+[data-theme="light"] .glass-sidebar {
+  border-right: 1px solid rgba(107, 33, 240, 0.08);
+}
+
+.glass-topbar {
+  border-bottom: 1px solid rgba(139, 69, 255, 0.1);
+}
+[data-theme="light"] .glass-topbar {
+  border-bottom: 1px solid rgba(107, 33, 240, 0.08);
+}
+
+/* Light theme: topbar/sidebar text and icon overrides */
+[data-theme="light"] .nav-icon-btn {
+  background: rgba(107, 33, 240, 0.06) !important;
+  border-color: rgba(107, 33, 240, 0.1) !important;
+}
+
+/* Light theme: bottom nav */
+[data-theme="light"] .glass-bottomnav {
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid rgba(107, 33, 240, 0.08);
+}
 
 /* ═══════════════════════════════════════════════
    LANDING PAGE — GITHUB-STYLE

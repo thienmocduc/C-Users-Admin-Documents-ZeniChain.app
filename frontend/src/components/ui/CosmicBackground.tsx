@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "next-themes";
 
 export function CosmicBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
+  const { theme } = useTheme();
+  const isLight = theme === "light";
 
   // Delay canvas init to not block first paint
   useEffect(() => {
@@ -193,6 +196,41 @@ export function CosmicBackground() {
       window.removeEventListener("resize", resize);
     };
   }, [ready]);
+
+  if (isLight) {
+    return (
+      <div
+        className="pointer-events-none fixed inset-0"
+        style={{
+          zIndex: 0,
+          background: `
+            linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 30%, #EDE9FE 60%, #E0F2FE 100%)
+          `,
+        }}
+        aria-hidden="true"
+      >
+        {/* Subtle light orbs for light theme */}
+        <div
+          className="absolute"
+          style={{
+            width: 500, height: 500, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(107,33,240,0.06) 0%, transparent 70%)",
+            top: "10%", left: "15%",
+            animation: "float 20s ease-in-out infinite",
+          }}
+        />
+        <div
+          className="absolute"
+          style={{
+            width: 400, height: 400, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(0,212,170,0.05) 0%, transparent 70%)",
+            bottom: "20%", right: "10%",
+            animation: "float 25s ease-in-out infinite reverse",
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <canvas
