@@ -16,14 +16,20 @@ export function CosmicBackground() {
     let w = 0;
     let h = 0;
 
-    // Chakra orbs — 4,5,6,7
+    // Chakra energy orbs — focused on C6 (Third Eye) & C7 (Crown)
     const orbs = [
-      { x: 0.15, y: 0.25, r: 350, color: [0, 212, 170], speed: 0.0004, phase: 0 },       // C4 Heart — teal
-      { x: 0.8, y: 0.55, r: 320, color: [74, 141, 255], speed: 0.00035, phase: 1.5 },     // C5 Throat — blue
-      { x: 0.5, y: 0.15, r: 380, color: [107, 33, 240], speed: 0.00045, phase: 3.0 },     // C6 Third Eye — indigo
-      { x: 0.25, y: 0.8, r: 300, color: [168, 85, 247], speed: 0.0003, phase: 4.5 },      // C7 Crown — violet
-      { x: 0.9, y: 0.1, r: 260, color: [192, 132, 252], speed: 0.00038, phase: 2.0 },     // C7b Crown light
-      { x: 0.6, y: 0.7, r: 280, color: [24, 217, 162], speed: 0.00032, phase: 5.5 },      // C4b Heart glow
+      // C6 Third Eye — deep indigo, main energy
+      { x: 0.3, y: 0.3, r: 400, color: [107, 33, 240], speed: 0.006, orbitX: 0.2, orbitY: 0.15, phase: 0, pulse: 0.003 },
+      // C7 Crown — bright violet
+      { x: 0.7, y: 0.6, r: 380, color: [168, 85, 247], speed: 0.005, orbitX: 0.18, orbitY: 0.2, phase: 2.0, pulse: 0.004 },
+      // C7b Crown light — soft lavender
+      { x: 0.5, y: 0.2, r: 350, color: [192, 132, 252], speed: 0.007, orbitX: 0.22, orbitY: 0.12, phase: 4.0, pulse: 0.0035 },
+      // C6b Third Eye secondary — deeper
+      { x: 0.2, y: 0.75, r: 320, color: [139, 69, 255], speed: 0.0055, orbitX: 0.15, orbitY: 0.18, phase: 1.0, pulse: 0.003 },
+      // Touch of C5 Throat blue for contrast
+      { x: 0.85, y: 0.35, r: 280, color: [74, 141, 255], speed: 0.004, orbitX: 0.12, orbitY: 0.14, phase: 3.0, pulse: 0.002 },
+      // Touch of C4 Heart teal for depth
+      { x: 0.6, y: 0.85, r: 260, color: [0, 212, 170], speed: 0.0045, orbitX: 0.14, orbitY: 0.1, phase: 5.0, pulse: 0.0025 },
     ];
 
     // Shooting stars
@@ -34,16 +40,16 @@ export function CosmicBackground() {
     const stars: Star[] = [];
 
     function spawnStar() {
-      const angle = Math.PI * 0.15 + Math.random() * Math.PI * 0.2; // ~30-60 degrees
+      const angle = Math.PI * 0.12 + Math.random() * Math.PI * 0.25;
       stars.push({
-        x: Math.random() * w * 0.8,
+        x: Math.random() * w * 0.9,
         y: -10,
-        len: 60 + Math.random() * 100,
-        speed: 3 + Math.random() * 4,
+        len: 80 + Math.random() * 140,
+        speed: 4 + Math.random() * 5,
         angle,
         life: 0,
-        maxLife: 60 + Math.random() * 40,
-        brightness: 0.5 + Math.random() * 0.5,
+        maxLife: 50 + Math.random() * 50,
+        brightness: 0.6 + Math.random() * 0.4,
       });
     }
 
@@ -70,45 +76,56 @@ export function CosmicBackground() {
       // Clear
       ctx.clearRect(0, 0, w, h);
 
-      // Dark base
-      ctx.fillStyle = "#07090F";
+      // Dark cosmic base
+      ctx.fillStyle = "#050710";
       ctx.fillRect(0, 0, w, h);
 
-      // Draw chakra orbs
+      // Draw chakra energy orbs with visible movement
       for (const orb of orbs) {
-        const ox = orb.x * w + Math.sin(t * orb.speed + orb.phase) * w * 0.12;
-        const oy = orb.y * h + Math.cos(t * orb.speed * 0.7 + orb.phase) * h * 0.1;
+        const ox = orb.x * w + Math.sin(t * orb.speed + orb.phase) * w * orb.orbitX;
+        const oy = orb.y * h + Math.cos(t * orb.speed * 0.8 + orb.phase + 1) * h * orb.orbitY;
         const [r, g, b] = orb.color;
 
-        // Outer glow
-        const grad = ctx.createRadialGradient(ox, oy, 0, ox, oy, orb.r);
-        grad.addColorStop(0, `rgba(${r},${g},${b},0.18)`);
-        grad.addColorStop(0.3, `rgba(${r},${g},${b},0.10)`);
-        grad.addColorStop(0.6, `rgba(${r},${g},${b},0.04)`);
+        // Pulsing radius
+        const pulseR = orb.r + Math.sin(t * orb.pulse) * 40;
+
+        // Large outer energy field
+        const grad = ctx.createRadialGradient(ox, oy, 0, ox, oy, pulseR);
+        grad.addColorStop(0, `rgba(${r},${g},${b},0.22)`);
+        grad.addColorStop(0.2, `rgba(${r},${g},${b},0.14)`);
+        grad.addColorStop(0.5, `rgba(${r},${g},${b},0.06)`);
+        grad.addColorStop(0.8, `rgba(${r},${g},${b},0.02)`);
         grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, w, h);
 
-        // Inner bright core
-        const grad2 = ctx.createRadialGradient(ox, oy, 0, ox, oy, orb.r * 0.3);
-        grad2.addColorStop(0, `rgba(${r},${g},${b},0.25)`);
+        // Bright inner core — the chakra center
+        const coreR = pulseR * 0.25;
+        const grad2 = ctx.createRadialGradient(ox, oy, 0, ox, oy, coreR);
+        grad2.addColorStop(0, `rgba(${Math.min(r + 60, 255)},${Math.min(g + 60, 255)},${Math.min(b + 60, 255)},0.3)`);
+        grad2.addColorStop(0.5, `rgba(${r},${g},${b},0.15)`);
         grad2.addColorStop(1, `rgba(${r},${g},${b},0)`);
         ctx.fillStyle = grad2;
         ctx.fillRect(0, 0, w, h);
       }
 
-      // Subtle nebula overlay — connecting energy
-      const nebulaX = w * 0.5 + Math.sin(t * 0.0002) * w * 0.1;
-      const nebulaY = h * 0.5 + Math.cos(t * 0.00015) * h * 0.1;
-      const nebula = ctx.createRadialGradient(nebulaX, nebulaY, 0, nebulaX, nebulaY, w * 0.5);
-      nebula.addColorStop(0, "rgba(139, 69, 255, 0.06)");
-      nebula.addColorStop(0.5, "rgba(74, 141, 255, 0.03)");
-      nebula.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = nebula;
+      // Flowing energy stream between C6 and C7 orbs
+      const o1x = orbs[0].x * w + Math.sin(t * orbs[0].speed + orbs[0].phase) * w * orbs[0].orbitX;
+      const o1y = orbs[0].y * h + Math.cos(t * orbs[0].speed * 0.8 + orbs[0].phase + 1) * h * orbs[0].orbitY;
+      const o2x = orbs[1].x * w + Math.sin(t * orbs[1].speed + orbs[1].phase) * w * orbs[1].orbitX;
+      const o2y = orbs[1].y * h + Math.cos(t * orbs[1].speed * 0.8 + orbs[1].phase + 1) * h * orbs[1].orbitY;
+      const midX = (o1x + o2x) / 2 + Math.sin(t * 0.008) * 60;
+      const midY = (o1y + o2y) / 2 + Math.cos(t * 0.006) * 40;
+
+      const stream = ctx.createRadialGradient(midX, midY, 0, midX, midY, 250);
+      stream.addColorStop(0, "rgba(139, 69, 255, 0.08)");
+      stream.addColorStop(0.5, "rgba(168, 85, 247, 0.04)");
+      stream.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = stream;
       ctx.fillRect(0, 0, w, h);
 
-      // Spawn shooting stars — random interval
-      if (starTimer > 80 + Math.random() * 200) {
+      // Spawn shooting stars
+      if (starTimer > 60 + Math.random() * 140) {
         spawnStar();
         starTimer = 0;
       }
@@ -135,24 +152,24 @@ export function CosmicBackground() {
         const tailY = s.y - Math.sin(s.angle) * s.len;
 
         const grad = ctx.createLinearGradient(tailX, tailY, s.x, s.y);
-        grad.addColorStop(0, `rgba(255, 255, 255, 0)`);
-        grad.addColorStop(0.7, `rgba(200, 210, 255, ${alpha * 0.3})`);
-        grad.addColorStop(1, `rgba(255, 255, 255, ${alpha * 0.8})`);
+        grad.addColorStop(0, "rgba(255, 255, 255, 0)");
+        grad.addColorStop(0.6, `rgba(192, 132, 252, ${alpha * 0.4})`);
+        grad.addColorStop(1, `rgba(255, 255, 255, ${alpha * 0.9})`);
 
         ctx.beginPath();
         ctx.moveTo(tailX, tailY);
         ctx.lineTo(s.x, s.y);
         ctx.strokeStyle = grad;
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2;
         ctx.stroke();
 
         // Star head glow
-        const headGlow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, 6);
-        headGlow.addColorStop(0, `rgba(255, 255, 255, ${alpha * 0.9})`);
-        headGlow.addColorStop(0.5, `rgba(192, 132, 252, ${alpha * 0.3})`);
-        headGlow.addColorStop(1, `rgba(107, 33, 240, 0)`);
+        const headGlow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, 8);
+        headGlow.addColorStop(0, `rgba(255, 255, 255, ${alpha})`);
+        headGlow.addColorStop(0.4, `rgba(192, 132, 252, ${alpha * 0.5})`);
+        headGlow.addColorStop(1, "rgba(107, 33, 240, 0)");
         ctx.fillStyle = headGlow;
-        ctx.fillRect(s.x - 6, s.y - 6, 12, 12);
+        ctx.fillRect(s.x - 8, s.y - 8, 16, 16);
       }
 
       animId = requestAnimationFrame(draw);
