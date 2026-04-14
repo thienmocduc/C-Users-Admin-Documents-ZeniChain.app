@@ -73,14 +73,15 @@ export function Sidebar() {
         {/* Logo */}
         <div className="px-4 pt-[14px] pb-[12px] border-b border-[var(--border)]">
           <div className="flex items-center gap-[10px]">
-            <img
-              src="/logo-tree-120.png"
-              alt="Zeni Chain"
-              width={32}
-              height={32}
-              className="flex-shrink-0 object-contain"
-              style={{ filter: "drop-shadow(0 0 6px rgba(0,180,255,0.3))" }}
-            />
+            <div
+              className="flex h-8 w-8 flex-shrink-0 items-center justify-center text-[14px] font-black text-white"
+              style={{
+                background: "linear-gradient(135deg, #00D4AA, #4A8DFF, #6B21F0, #C084FC)",
+                clipPath: "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)",
+              }}
+            >
+              Z
+            </div>
             <div>
               <div className="text-[16px] font-bold text-[var(--white)]">
                 Zeni<span className="text-[var(--c6b)]"> Chain</span>
