@@ -6,6 +6,7 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { CosmicBackground } from "@/components/ui/CosmicBackground";
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -60,8 +61,9 @@ export default function AppLayout({
 
   return (
     <div className="flex h-dvh overflow-hidden" style={{ background: "var(--bg)" }}>
+      <CosmicBackground />
       <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden min-w-0">
+      <div className="relative z-[1] flex flex-1 flex-col overflow-hidden min-w-0">
         <Topbar title={title} />
         <main className="flex-1 overflow-y-auto p-6 max-md:px-3 max-md:py-4 max-md:pb-20">
           {children}

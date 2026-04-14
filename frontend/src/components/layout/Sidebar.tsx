@@ -74,8 +74,10 @@ export function Sidebar() {
           transition-transform duration-300
         `}
         style={{
-          background: "var(--bg2)",
-          borderRight: "1px solid var(--border)",
+          background: "rgba(15, 18, 32, 0.75)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          borderRight: "1px solid rgba(139, 69, 255, 0.1)",
         }}
       >
         {/* Logo */}

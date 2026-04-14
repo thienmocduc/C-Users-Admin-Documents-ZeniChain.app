@@ -61,8 +61,10 @@ export function Topbar({ title = "Dashboard" }: TopbarProps) {
     <header
       className="flex h-14 flex-shrink-0 items-center gap-[10px] px-5 z-[100]"
       style={{
-        background: "var(--bg2)",
-        borderBottom: "1px solid var(--border)",
+        background: "rgba(15, 18, 32, 0.7)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        borderBottom: "1px solid rgba(139, 69, 255, 0.1)",
       }}
     >
       {/* Hamburger - mobile */}
