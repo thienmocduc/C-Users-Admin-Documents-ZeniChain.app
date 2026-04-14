@@ -97,12 +97,7 @@ export function Topbar({ title = "Dashboard" }: TopbarProps) {
       {/* Language switcher */}
       <div className="relative" ref={langRef}>
         <button
-          className="flex items-center gap-[5px] rounded-[20px] px-3 py-[6px] text-[12px] font-semibold cursor-pointer transition-all duration-200"
-          style={{
-            background: "rgba(107,33,240,0.09)",
-            border: "1px solid rgba(139,69,255,0.22)",
-            color: "var(--c6b)",
-          }}
+          className="lang-btn-styled flex items-center gap-[5px] rounded-[20px] px-3 py-[6px] text-[12px] font-semibold cursor-pointer transition-all duration-200 text-[var(--c6b)]"
           onClick={() => setLangOpen(!langOpen)}
         >
           <span>{currentFlag}</span>
@@ -112,13 +107,7 @@ export function Topbar({ title = "Dashboard" }: TopbarProps) {
 
         {langOpen && (
           <div
-            className="absolute top-[calc(100%+8px)] right-0 z-[9999] min-w-[210px] max-h-[380px] overflow-y-auto rounded-[14px] p-2"
-            style={{
-              background: "var(--bg2)",
-              border: "1px solid var(--border2)",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
-              backdropFilter: "blur(24px)",
-            }}
+            className="lang-dropdown-box absolute top-[calc(100%+8px)] right-0 z-[9999] min-w-[210px] max-h-[380px] overflow-y-auto rounded-[14px] p-2"
           >
             {LANGUAGES.map((lang) => (
               <button
@@ -157,13 +146,7 @@ export function Topbar({ title = "Dashboard" }: TopbarProps) {
       {/* Theme toggle */}
       {mounted && (
         <button
-          className="flex h-[34px] w-[34px] items-center justify-center rounded-[10px] text-[16px] cursor-pointer transition-all duration-150"
-          style={{
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid var(--border)",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.09)")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
+          className="topbar-icon-btn flex h-[34px] w-[34px] items-center justify-center rounded-[10px] text-[16px] cursor-pointer transition-all duration-150"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         >
           {theme === "dark" ? "🌙" : "☀️"}
@@ -172,13 +155,7 @@ export function Topbar({ title = "Dashboard" }: TopbarProps) {
 
       {/* Notification bell */}
       <button
-        className="relative flex h-[34px] w-[34px] items-center justify-center rounded-[10px] text-[16px] cursor-pointer transition-all duration-150"
-        style={{
-          background: "rgba(255,255,255,0.05)",
-          border: "1px solid var(--border)",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.09)")}
-        onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
+        className="topbar-icon-btn relative flex h-[34px] w-[34px] items-center justify-center rounded-[10px] text-[16px] cursor-pointer transition-all duration-150"
       >
         🔔
         <span
