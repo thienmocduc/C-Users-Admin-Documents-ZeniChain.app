@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const kpis = [
   { label: "TOTAL STAKED", value: "2,100", sub: "$Zeni", color: "var(--white)" },
@@ -25,6 +26,7 @@ const stakingHistory = [
 export default function StakingPage() {
   const [selectedPool, setSelectedPool] = useState(1);
   const [stakeAmount, setStakeAmount] = useState("");
+  const { t } = useTranslation();
 
   const pool = pools[selectedPool];
   const amount = parseFloat(stakeAmount) || 0;
@@ -49,7 +51,7 @@ export default function StakingPage() {
         <div>
           {/* Pool Selection */}
           <div className="card">
-            <div className="card-title">CHON POOL STAKING</div>
+            <div className="card-title">{t('staking_choose_pool')}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {pools.map((p, i) => (
                 <button
@@ -96,7 +98,7 @@ export default function StakingPage() {
 
           {/* Current Staking */}
           <div className="card">
-            <div className="card-title">STAKING HIEN TAI</div>
+            <div className="card-title">{t('staking_staked')}</div>
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 12 }}>
               <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg, rgba(107,33,240,0.2), rgba(0,212,170,0.15))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
                 📈
@@ -130,8 +132,8 @@ export default function StakingPage() {
             {/* Amount Input */}
             <div style={{ marginBottom: 16 }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{ fontSize: 10, letterSpacing: 1, textTransform: "uppercase", color: "var(--dim)", fontFamily: "var(--font-mono)" }}>SO LUONG</span>
-                <span style={{ fontSize: 11, color: "var(--dim)" }}>Kha dung: 22,750 Zeni</span>
+                <span style={{ fontSize: 10, letterSpacing: 1, textTransform: "uppercase", color: "var(--dim)", fontFamily: "var(--font-mono)" }}>{t('staking_calc_amount')}</span>
+                <span style={{ fontSize: 11, color: "var(--dim)" }}>{t('available')}: 22,750 Zeni</span>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
                 <input
@@ -161,7 +163,7 @@ export default function StakingPage() {
               marginBottom: 16,
             }}>
               <div style={{ fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: "var(--c4)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>
-                UOC TINH PHAN THUONG
+                {t('staking_calc_yearly')}
               </div>
               <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: 28, fontWeight: 800, color: "var(--c4)" }}>+{estimatedReward.toLocaleString()}</span>
@@ -185,7 +187,7 @@ export default function StakingPage() {
 
           {/* Staking History */}
           <div className="card">
-            <div className="card-title">LICH SU STAKING</div>
+            <div className="card-title">{t('staking_history')}</div>
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
                 <thead>

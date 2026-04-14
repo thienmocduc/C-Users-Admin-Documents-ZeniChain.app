@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const recentTx = [
   { icon: "💰", bg: "rgba(0,212,170,0.12)", name: "Hoa hong F1 - don #A4821", meta: "Hom nay 14:23", amount: "+750 Zeni", amountColor: "var(--c4)", status: "Released", statusClass: "status-released" },
@@ -25,6 +26,7 @@ const actions = [
 ];
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   return (
     <div className="page-grid">
       {/* ═══ LEFT COLUMN ═══ */}
@@ -32,7 +34,7 @@ export default function DashboardPage() {
         {/* Balance Hero */}
         <div className="balance-hero">
           <div style={{ fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: "var(--dim)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>
-            TONG TAI SAN
+            {t('total_assets')}
           </div>
           <div className="balance-amount">24,850</div>
           <div className="balance-token">$Zeni Token</div>
@@ -68,7 +70,7 @@ export default function DashboardPage() {
       <div>
         {/* Recent Transactions */}
         <div className="card">
-          <div className="card-title">GIAO DICH GAN DAY</div>
+          <div className="card-title">{t('onchain_tx_history')}</div>
           {recentTx.map((tx, i) => (
             <div className="tx-item" key={i}>
               <div className="tx-icon" style={{ background: tx.bg }}>{tx.icon}</div>
@@ -85,13 +87,13 @@ export default function DashboardPage() {
             </div>
           ))}
           <div style={{ textAlign: "center", marginTop: 12 }}>
-            <button className="btn-ghost btn" style={{ fontSize: 12 }}>Xem tat ca giao dich</button>
+            <button className="btn-ghost btn" style={{ fontSize: 12 }}>{t('see_all')}</button>
           </div>
         </div>
 
         {/* Rank Card */}
         <div className="card" style={{ marginTop: 16 }}>
-          <div className="card-title">RANK HIEN TAI</div>
+          <div className="card-title">{t('dash_rank_title')}</div>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg, rgba(107,33,240,0.2), rgba(139,69,255,0.15))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>
               👑
@@ -110,7 +112,7 @@ export default function DashboardPage() {
 
         {/* Ambassador Progress */}
         <div className="card" style={{ marginTop: 16 }}>
-          <div className="card-title">TIEN DO DAI SU</div>
+          <div className="card-title">{t('dash_progress_title')}</div>
           {[
             { label: "Team A GMV", val: "180tr / 250tr", pct: 72, color: "var(--c6b)" },
             { label: "Team B GMV", val: "95tr / 250tr", pct: 38, color: "var(--c5)" },

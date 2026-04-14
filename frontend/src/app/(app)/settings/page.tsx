@@ -2,16 +2,19 @@
 
 import { useState } from "react";
 import { InstallPrompt } from "@/components/ui/InstallPrompt";
-
-const tabList = [
-  { id: "profile", label: "Profile" },
-  { id: "kyc", label: "KYC" },
-  { id: "security", label: "Security" },
-  { id: "wallet", label: "Wallet" },
-  { id: "preferences", label: "Preferences" },
-];
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function SettingsPage() {
+  const { t } = useTranslation();
+
+  const tabList = [
+    { id: "profile", label: t('settings_tab_profile') },
+    { id: "kyc", label: t('settings_tab_kyc') },
+    { id: "security", label: t('settings_tab_security') },
+    { id: "wallet", label: t('settings_tab_wallet') },
+    { id: "preferences", label: t('settings_tab_prefs') },
+  ];
+
   const [tab, setTab] = useState("profile");
   const [darkMode, setDarkMode] = useState(true);
   const [showBalance, setShowBalance] = useState(true);
@@ -23,7 +26,7 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <div className="section-title">Settings</div>
+      <div className="section-title">{t('nav_settings')}</div>
 
       {/* Tab navigation */}
       <div className="settings-tabs-nav">
@@ -82,7 +85,7 @@ export default function SettingsPage() {
 
           {/* Form */}
           <div className="card">
-            <div className="card-title">Personal Info</div>
+            <div className="card-title">{t('settings_personal_info')}</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
               {[
                 { label: "Full Name", val: "Thien Moc Duc" },
@@ -96,7 +99,7 @@ export default function SettingsPage() {
                 </div>
               ))}
             </div>
-            <button className="btn btn-primary" style={{ marginTop: 16 }}>Save Changes</button>
+            <button className="btn btn-primary" style={{ marginTop: 16 }}>{t('settings_save_changes')}</button>
           </div>
         </div>
       )}
@@ -104,7 +107,7 @@ export default function SettingsPage() {
       {/* ===== KYC ===== */}
       {tab === "kyc" && (
         <div className="card">
-          <div className="card-title">KYC Verification</div>
+          <div className="card-title">{t('settings_kyc_verify')}</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {/* Step 1 - Done */}
             <div
@@ -248,12 +251,12 @@ export default function SettingsPage() {
       {tab === "security" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div className="card">
-            <div className="card-title">Account Security</div>
+            <div className="card-title">{t('settings_tab_security')}</div>
 
             {/* Change password */}
             <div className="toggle-row">
               <div className="toggle-info">
-                <div className="toggle-label">Change Password</div>
+                <div className="toggle-label">{t('settings_change_pw')}</div>
                 <div className="toggle-sub">Last changed 30 days ago</div>
               </div>
               <button className="btn btn-secondary" style={{ padding: "6px 14px", fontSize: 11 }}>Change</button>
@@ -262,7 +265,7 @@ export default function SettingsPage() {
             {/* PIN */}
             <div className="toggle-row">
               <div className="toggle-info">
-                <div className="toggle-label">Transaction PIN</div>
+                <div className="toggle-label">{t('settings_pin_title')}</div>
                 <div className="toggle-sub">6-digit PIN for transactions</div>
               </div>
               <span
@@ -282,7 +285,7 @@ export default function SettingsPage() {
             {/* 2FA */}
             <div className="toggle-row" style={{ borderBottom: "none" }}>
               <div className="toggle-info">
-                <div className="toggle-label">Two-Factor Authentication (2FA)</div>
+                <div className="toggle-label">{t('settings_2fa_title')}</div>
                 <div className="toggle-sub">Google Authenticator or SMS</div>
               </div>
               <div
@@ -296,7 +299,7 @@ export default function SettingsPage() {
 
           {/* Login sessions */}
           <div className="card">
-            <div className="card-title">Login Sessions</div>
+            <div className="card-title">{t('settings_sessions')}</div>
             {[
               { device: "Chrome - Windows 11", time: "Active now", current: true },
               { device: "Safari - iPhone 15", time: "2 hours ago", current: false },
@@ -332,7 +335,7 @@ export default function SettingsPage() {
       {/* ===== WALLET ===== */}
       {tab === "wallet" && (
         <div className="card">
-          <div className="card-title">Connected Wallet</div>
+          <div className="card-title">{t('settings_tab_wallet')}</div>
 
           {/* Address */}
           <div
@@ -389,12 +392,12 @@ export default function SettingsPage() {
         <>
         <InstallPrompt />
         <div className="card">
-          <div className="card-title">Display</div>
+          <div className="card-title">{t('settings_appearance')}</div>
 
           {/* Toggle rows */}
           <div className="toggle-row">
             <div className="toggle-info">
-              <div className="toggle-label">Dark Mode</div>
+              <div className="toggle-label">{t('settings_dark_mode')}</div>
               <div className="toggle-sub">Switch between dark and light theme</div>
             </div>
             <div className={`toggle-switch ${darkMode ? "on" : ""}`} onClick={() => setDarkMode(!darkMode)}>
@@ -404,7 +407,7 @@ export default function SettingsPage() {
 
           <div className="toggle-row">
             <div className="toggle-info">
-              <div className="toggle-label">Show Balance</div>
+              <div className="toggle-label">{t('settings_show_balance')}</div>
               <div className="toggle-sub">Display balance on dashboard</div>
             </div>
             <div className={`toggle-switch ${showBalance ? "on" : ""}`} onClick={() => setShowBalance(!showBalance)}>
@@ -414,7 +417,7 @@ export default function SettingsPage() {
 
           <div className="toggle-row" style={{ borderBottom: "none" }}>
             <div className="toggle-info">
-              <div className="toggle-label">Chakra Effects</div>
+              <div className="toggle-label">{t('settings_chakra_fx')}</div>
               <div className="toggle-sub">Visual effects and animations</div>
             </div>
             <div className={`toggle-switch ${chakra ? "on" : ""}`} onClick={() => setChakra(!chakra)}>
@@ -424,24 +427,24 @@ export default function SettingsPage() {
 
           {/* Selects */}
           <div style={{ marginTop: 20 }}>
-            <div className="card-title">Regional</div>
+            <div className="card-title">{t('settings_lang_region')}</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
               <div>
-                <label className="input-label">Language</label>
+                <label className="input-label">{t('settings_display_lang')}</label>
                 <select className="input-field" defaultValue="vi">
                   <option value="vi">Tieng Viet</option>
                   <option value="en">English</option>
                 </select>
               </div>
               <div>
-                <label className="input-label">Currency</label>
+                <label className="input-label">{t('settings_currency')}</label>
                 <select className="input-field" defaultValue="VND">
                   <option value="VND">VND</option>
                   <option value="USD">USD</option>
                 </select>
               </div>
               <div>
-                <label className="input-label">Timezone</label>
+                <label className="input-label">{t('settings_timezone')}</label>
                 <select className="input-field" defaultValue="UTC+7">
                   <option value="UTC+7">UTC+7 (HCM)</option>
                   <option value="UTC+0">UTC+0</option>
@@ -452,11 +455,11 @@ export default function SettingsPage() {
 
           {/* Notification toggles */}
           <div style={{ marginTop: 20 }}>
-            <div className="card-title">Notifications</div>
+            <div className="card-title">{t('settings_notifications')}</div>
 
             <div className="toggle-row">
               <div className="toggle-info">
-                <div className="toggle-label">Commission alerts</div>
+                <div className="toggle-label">{t('settings_notif_commission')}</div>
                 <div className="toggle-sub">New commissions and payouts</div>
               </div>
               <div className={`toggle-switch ${notifCommission ? "on" : ""}`} onClick={() => setNotifCommission(!notifCommission)}>
@@ -466,7 +469,7 @@ export default function SettingsPage() {
 
             <div className="toggle-row">
               <div className="toggle-info">
-                <div className="toggle-label">News & Updates</div>
+                <div className="toggle-label">{t('settings_notif_news')}</div>
                 <div className="toggle-sub">Platform news and promotions</div>
               </div>
               <div className={`toggle-switch ${notifNews ? "on" : ""}`} onClick={() => setNotifNews(!notifNews)}>
@@ -476,7 +479,7 @@ export default function SettingsPage() {
 
             <div className="toggle-row">
               <div className="toggle-info">
-                <div className="toggle-label">On-chain events</div>
+                <div className="toggle-label">{t('settings_notif_onchain')}</div>
                 <div className="toggle-sub">Transaction confirmations</div>
               </div>
               <div className={`toggle-switch ${notifOnchain ? "on" : ""}`} onClick={() => setNotifOnchain(!notifOnchain)}>
@@ -486,7 +489,7 @@ export default function SettingsPage() {
 
             <div className="toggle-row" style={{ borderBottom: "none" }}>
               <div className="toggle-info">
-                <div className="toggle-label">Rank changes</div>
+                <div className="toggle-label">{t('settings_notif_rank')}</div>
                 <div className="toggle-sub">Rank up / down notifications</div>
               </div>
               <div className={`toggle-switch ${notifRank ? "on" : ""}`} onClick={() => setNotifRank(!notifRank)}>

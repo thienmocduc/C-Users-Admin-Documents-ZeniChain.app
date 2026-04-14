@@ -2,17 +2,19 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-
-const items = [
-  { href: "/dashboard", icon: "🏠", label: "Home" },
-  { href: "/affiliate", icon: "🤝", label: "Affiliate" },
-  { href: "/voucher", icon: "🎟", label: "Voucher" },
-  { href: "/staking", icon: "🔒", label: "Staking" },
-  { href: "/settings", icon: "👤", label: "Tài khoản" },
-];
+import { useTranslation } from "@/hooks/useTranslation";
 
 export function BottomNav() {
   const pathname = usePathname();
+  const { t } = useTranslation();
+
+  const items = [
+    { href: "/dashboard", icon: "🏠", label: t('bnav_home') },
+    { href: "/affiliate", icon: "🤝", label: t('bnav_affiliate') },
+    { href: "/voucher", icon: "🎟", label: t('bnav_voucher') },
+    { href: "/staking", icon: "🔒", label: t('bnav_staking') },
+    { href: "/settings", icon: "👤", label: t('bnav_account') },
+  ];
 
   return (
     <nav

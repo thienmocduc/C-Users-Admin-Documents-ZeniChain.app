@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslation } from "@/hooks/useTranslation";
+
 const proposals = [
   {
     id: "ZGP-009",
@@ -44,13 +46,14 @@ const proposals = [
 ];
 
 export default function GovernancePage() {
+  const { t } = useTranslation();
   return (
     <div>
-      <div className="section-title">Governance</div>
+      <div className="section-title">{t('nav_governance')}</div>
 
       {/* Voting Power */}
       <div className="card" style={{ borderColor: "rgba(139, 69, 255, 0.3)" }}>
-        <div className="card-title">Voting Power</div>
+        <div className="card-title">{t('gov_voting_power')}</div>
         <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
           <span style={{ fontSize: 32, fontWeight: 900, fontFamily: "var(--font-mono)", color: "var(--white)" }}>
             2,100
@@ -82,7 +85,7 @@ export default function GovernancePage() {
 
       {/* Proposals */}
       <div className="card">
-        <div className="card-title">Proposals</div>
+        <div className="card-title">{t('gov_proposals_active')}</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {proposals.map((p) => (
             <div
@@ -150,7 +153,7 @@ export default function GovernancePage() {
 
       {/* Create Proposal */}
       <button className="btn btn-secondary" style={{ width: "100%" }}>
-        Create Proposal (requires 1,000 vZENI)
+        {t('gov_create_proposal')}
       </button>
     </div>
   );

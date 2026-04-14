@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const incomeRows = [
   { label: "F1 Truc tiep", amount: "1.2M", pct: 46, color: "var(--c4)" },
@@ -22,6 +23,7 @@ const commissionHistory = [
 
 export default function AffiliatePage() {
   const [activeFilter, setActiveFilter] = useState("All");
+  const { t } = useTranslation();
 
   return (
     <div className="page-grid">
@@ -30,7 +32,7 @@ export default function AffiliatePage() {
         {/* Rank Hero */}
         <div className="rank-hero">
           <div style={{ fontSize: 11, color: "rgba(240,244,255,0.4)", letterSpacing: 2, textTransform: "uppercase", fontFamily: "var(--font-mono)", marginBottom: 8 }}>
-            RANK HIEN TAI
+            {t('dash_rank_title')}
           </div>
           <div style={{ fontSize: 42, marginBottom: 4 }}>👑</div>
           <div className="rank-name" style={{ fontSize: 26 }}>KOC Pro</div>
@@ -44,19 +46,19 @@ export default function AffiliatePage() {
 
         {/* Affiliate Code */}
         <div className="aff-code-wrap">
-          <div className="aff-code-label">MA GIOI THIEU</div>
+          <div className="aff-code-label">{t('affiliate_code')}</div>
           <div className="aff-code-text">ANIMA-DUC-4821</div>
           <button className="btn btn-secondary" style={{ marginTop: 12, width: "100%", justifyContent: "center", fontSize: 12 }}>
-            📋 Copy link gioi thieu
+            {t('copy_link')}
           </button>
         </div>
 
         {/* Team Stats */}
         <div className="card">
-          <div className="card-title">DOI NHOM</div>
+          <div className="card-title">{t('aff_team')}</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
             <div className="stat-mini">
-              <div className="stat-mini-label">TONG F1</div>
+              <div className="stat-mini-label">{t('aff_total_f1')}</div>
               <div className="stat-mini-value" style={{ fontSize: 20 }}>12</div>
               <div className="stat-mini-sub">8 active</div>
             </div>
@@ -69,7 +71,7 @@ export default function AffiliatePage() {
 
           {/* Ambassador Progress */}
           <div style={{ fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: "var(--dim)", fontFamily: "var(--font-mono)", marginBottom: 10 }}>
-            TIEN DO DAI SU
+            {t('dash_progress_title')}
           </div>
           {[
             { label: "Team A GMV", val: "180tr / 250tr", pct: 72, color: "var(--c6b)" },
@@ -95,7 +97,7 @@ export default function AffiliatePage() {
           <span style={{ fontSize: 20 }}>⏳</span>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: "var(--gold)" }}>850K Zeni dang trong escrow</div>
-            <div style={{ fontSize: 11, color: "var(--dim)" }}>Tu dong release sau 7 ngay xac nhan</div>
+            <div style={{ fontSize: 11, color: "var(--dim)" }}>{t('escrow_sub')}</div>
           </div>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--gold)", flexShrink: 0 }}>Release: 20/04</div>
         </div>
@@ -103,7 +105,7 @@ export default function AffiliatePage() {
         {/* Monthly Income Breakdown */}
         <div className="card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <div className="card-title" style={{ marginBottom: 0 }}>THU NHAP THANG 04/2026</div>
+            <div className="card-title" style={{ marginBottom: 0 }}>{t('aff_income_title')}</div>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 16, fontWeight: 700, color: "var(--white)" }}>2.6M</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -124,7 +126,7 @@ export default function AffiliatePage() {
 
         {/* Commission History */}
         <div className="card">
-          <div className="card-title">LICH SU HOA HONG</div>
+          <div className="card-title">{t('aff_commission_history')}</div>
           <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
             {filters.map((f) => (
               <button

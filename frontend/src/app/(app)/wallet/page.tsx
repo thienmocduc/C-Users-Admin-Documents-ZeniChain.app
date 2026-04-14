@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslation } from "@/hooks/useTranslation";
+
 const walletInfo = [
   { key: "Address", val: "0x76AB...CE91", cls: "blue" },
   { key: "Network", val: "Polygon", cls: "purple" },
@@ -16,6 +18,7 @@ const txHistory = [
 ];
 
 export default function WalletPage() {
+  const { t } = useTranslation();
   return (
     <div className="page-grid">
       {/* ═══ LEFT COLUMN ═══ */}
@@ -31,7 +34,7 @@ export default function WalletPage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 16 }}>
             <div className="stat-mini">
-              <div className="stat-mini-label">KHA DUNG</div>
+              <div className="stat-mini-label">{t('available')}</div>
               <div className="stat-mini-value" style={{ fontSize: 18, color: "var(--c4)" }}>22,750</div>
               <div className="stat-mini-sub">Available</div>
             </div>
@@ -43,9 +46,9 @@ export default function WalletPage() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginTop: 14 }}>
-            <button className="btn btn-primary" style={{ justifyContent: "center" }}>↗ Gui</button>
-            <button className="btn btn-secondary" style={{ justifyContent: "center" }}>↙ Nhan</button>
-            <button className="btn btn-secondary" style={{ justifyContent: "center" }}>⇄ Swap</button>
+            <button className="btn btn-primary" style={{ justifyContent: "center" }}>{t('btn_send')}</button>
+            <button className="btn btn-secondary" style={{ justifyContent: "center" }}>{t('btn_receive')}</button>
+            <button className="btn btn-secondary" style={{ justifyContent: "center" }}>{t('btn_swap')}</button>
           </div>
         </div>
 
@@ -71,7 +74,7 @@ export default function WalletPage() {
             </div>
           </div>
           <button className="btn btn-secondary" style={{ width: "100%", justifyContent: "center" }}>
-            🌉 Mo AggLayer Bridge
+            {t('wallet_open_bridge')}
           </button>
         </div>
       </div>
@@ -80,7 +83,7 @@ export default function WalletPage() {
       <div>
         {/* Wallet Info */}
         <div className="card">
-          <div className="card-title">THONG TIN VI</div>
+          <div className="card-title">{t('wallet_info')}</div>
           {walletInfo.map((item) => (
             <div className="chain-info-row" key={item.key}>
               <span className="cir-key">{item.key}</span>
@@ -95,7 +98,7 @@ export default function WalletPage() {
 
         {/* Transaction History */}
         <div className="card">
-          <div className="card-title">LICH SU GIAO DICH VI</div>
+          <div className="card-title">{t('wallet_tx_history')}</div>
           {txHistory.map((tx, i) => (
             <div className="tx-item" key={i}>
               <div className="tx-icon" style={{ background: tx.bg }}>{tx.icon}</div>

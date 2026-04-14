@@ -5,52 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSidebarStore } from "@/stores/useSidebarStore";
 import { useAuthStore } from "@/stores/useAuthStore";
-
-const navSections = [
-  {
-    label: "TỔNG QUAN",
-    items: [
-      { href: "/dashboard", icon: "📊", text: "Dashboard" },
-    ],
-  },
-  {
-    label: "TÀI SẢN",
-    items: [
-      { href: "/wallet", icon: "💎", text: "Ví & Tài sản" },
-    ],
-  },
-  {
-    label: "KINH DOANH",
-    items: [
-      { href: "/affiliate", icon: "🤝", text: "Affiliate" },
-      { href: "/voucher", icon: "🎟", text: "NFT Voucher" },
-      { href: "/pools", icon: "🏆", text: "Pool Đại Sứ" },
-    ],
-  },
-  {
-    label: "BLOCKCHAIN",
-    items: [
-      { href: "/onchain", icon: "🔗", text: "On-Chain" },
-      { href: "/nfts", icon: "🏅", text: "NFT Badges" },
-    ],
-  },
-  {
-    label: "TĂNG TRƯỞNG",
-    items: [
-      { href: "/staking", icon: "🔒", text: "Staking", badge: "28%", badgeType: "teal" as const },
-      { href: "/governance", icon: "🗳", text: "Governance", badge: "DAO", badgeType: "violet" as const },
-      { href: "/analytics", icon: "📈", text: "Analytics" },
-      { href: "/tokenomics", icon: "💎", text: "Tokenomics" },
-    ],
-  },
-  {
-    label: "HỆ THỐNG",
-    items: [
-      { href: "/admin", icon: "🛡", text: "Admin Panel" },
-      { href: "/settings", icon: "⚙️", text: "Tài khoản" },
-    ],
-  },
-];
+import { useTranslation } from "@/hooks/useTranslation";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -58,6 +13,53 @@ export function Sidebar() {
   const { mobileOpen, setMobileOpen } = useSidebarStore();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
+  const { t } = useTranslation();
+
+  const navSections = [
+    {
+      label: t('nav_overview'),
+      items: [
+        { href: "/dashboard", icon: "📊", text: t('nav_dashboard') },
+      ],
+    },
+    {
+      label: t('nav_assets'),
+      items: [
+        { href: "/wallet", icon: "💎", text: t('nav_wallet') },
+      ],
+    },
+    {
+      label: t('nav_business'),
+      items: [
+        { href: "/affiliate", icon: "🤝", text: t('nav_affiliate') },
+        { href: "/voucher", icon: "🎟", text: t('nav_voucher') },
+        { href: "/pools", icon: "🏆", text: t('nav_pools') },
+      ],
+    },
+    {
+      label: t('nav_blockchain'),
+      items: [
+        { href: "/onchain", icon: "🔗", text: t('nav_onchain') },
+        { href: "/nfts", icon: "🏅", text: t('nav_nfts') },
+      ],
+    },
+    {
+      label: t('nav_growth'),
+      items: [
+        { href: "/staking", icon: "🔒", text: t('nav_staking'), badge: "28%", badgeType: "teal" as const },
+        { href: "/governance", icon: "🗳", text: t('nav_governance'), badge: "DAO", badgeType: "violet" as const },
+        { href: "/analytics", icon: "📈", text: t('nav_analytics') },
+        { href: "/tokenomics", icon: "💎", text: "Tokenomics" },
+      ],
+    },
+    {
+      label: t('nav_system'),
+      items: [
+        { href: "/admin", icon: "🛡", text: t('nav_admin') },
+        { href: "/settings", icon: "⚙️", text: t('nav_settings') },
+      ],
+    },
+  ];
 
   return (
     <>
