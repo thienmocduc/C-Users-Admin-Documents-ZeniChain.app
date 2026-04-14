@@ -39,6 +39,7 @@ const navSections = [
       { href: "/staking", icon: "🔒", text: "Staking", badge: "28%", badgeType: "teal" as const },
       { href: "/governance", icon: "🗳", text: "Governance", badge: "DAO", badgeType: "violet" as const },
       { href: "/analytics", icon: "📈", text: "Analytics" },
+      { href: "/tokenomics", icon: "💎", text: "Tokenomics" },
     ],
   },
   {

@@ -19,6 +19,7 @@ const pageTitles: Record<string, string> = {
   "/staking": "Staking",
   "/governance": "Governance",
   "/analytics": "Analytics",
+  "/tokenomics": "Tokenomics",
   "/admin": "Admin Panel",
   "/settings": "Tài khoản",
 };
