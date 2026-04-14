@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { CosmicBackground } from "@/components/ui/CosmicBackground";
 
 /* ═══ SCROLL REVEAL HOOK ═══ */
 function useReveal() {
@@ -117,6 +118,7 @@ export default function LandingPage() {
 
   return (
     <div className="landing-root">
+      <CosmicBackground />
       {/* ═══ NAVBAR ═══ */}
       <nav className={`land-nav ${scrollY > 50 ? "nav-scrolled" : ""}`}>
         <div className="nav-inner">
