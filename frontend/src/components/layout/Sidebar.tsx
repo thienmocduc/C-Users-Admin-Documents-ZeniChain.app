@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useSidebarStore } from "@/stores/useSidebarStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -53,8 +54,10 @@ const navSections = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { mobileOpen, setMobileOpen } = useSidebarStore();
   const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
 
   return (
     <>
@@ -209,6 +212,23 @@ export function Sidebar() {
             </div>
             <span className="text-[12px]" style={{ color: "var(--dim)" }}>›</span>
           </Link>
+          <button
+            onClick={() => { logout(); router.push("/login"); }}
+            className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl px-3 py-[8px] text-[11px] font-medium transition-all duration-200 cursor-pointer"
+            style={{
+              background: "rgba(224,82,82,0.08)",
+              border: "1px solid rgba(224,82,82,0.15)",
+              color: "#E05252",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(224,82,82,0.15)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(224,82,82,0.08)";
+            }}
+          >
+            🚪 Đăng xuất
+          </button>
         </div>
       </aside>
     </>
