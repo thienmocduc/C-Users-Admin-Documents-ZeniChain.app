@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zeni Chain · Offline</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#07090F;color:#F0F4FF;font-family:'Noto Sans',system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center;}
+.logo{width:64px;height:64px;background:linear-gradient(135deg,#00D4AA,#4A8DFF,#6B21F0,#C084FC);clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;color:#fff;margin:0 auto 24px;}
+h1{font-size:24px;font-weight:700;margin-bottom:12px;}
+p{font-size:15px;color:rgba(240,244,255,0.55);line-height:1.7;max-width:400px;margin:0 auto 32px;}
+button{padding:14px 32px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;border:none;background:linear-gradient(135deg,#6B21F0,#8B45FF);color:#fff;font-family:inherit;}
+button:hover{opacity:0.9;}
+</style>
+</head>
+<body>
+<div>
+  <div class="logo">Z</div>
+  <h1>Không có kết nối mạng</h1>
+  <p>Bạn đang offline. Vui lòng kiểm tra kết nối internet và thử lại.</p>
+  <button onclick="window.location.reload()">Thử lại</button>
+</div>
+</body>
+</html>

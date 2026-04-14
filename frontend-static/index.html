@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zeni Chain · Web3 Wellness Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══ RESET ═══ */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --c4:#00D4AA;--c4b:#18D9A2;
+  --c5:#4A8DFF;--c5b:#7AB4FF;
+  --c6:#6B21F0;--c6b:#8B45FF;
+  --c7:#A855F7;--c7b:#C084FC;
+  --zeni:var(--c6);--zeni2:var(--c6b);
+  --teal:var(--c4);--teal2:var(--c4b);
+  --blue:var(--c5);--green:#00D4AA;
+  --gold:#F59E0B;--red:#E05252;
+  --bg:#07090F;--bg2:rgba(15,18,32,0.92);--bg3:rgba(20,24,42,0.88);
+  --white:#F0F4FF;--muted:rgba(240,244,255,0.65);--dim:rgba(240,244,255,0.32);
+  --border:rgba(139,69,255,0.15);--border2:rgba(139,69,255,0.3);
+}
+body.light{
+  --bg:#EEF2FF;--bg2:rgba(255,255,255,0.92);--bg3:rgba(248,250,255,0.85);
+  --white:#0A0C1E;--muted:rgba(10,12,40,0.72);--dim:rgba(10,12,40,0.45);
+  --border:rgba(107,33,240,0.12);--border2:rgba(107,33,240,0.28);
+  --zeni:#5B18D0;--zeni2:#4A00C0;--green:#0CA87A;--gold:#B8760A;
+}
+html,body{height:100%;font-family:'Noto Sans',sans-serif;background:var(--bg);color:var(--white);}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:rgba(139,69,255,0.2);border-radius:2px;}
+
+/* ═══ LANDING PAGE ═══ */
+#landing{min-height:100vh;overflow-y:auto;background:var(--bg);}
+.land-nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;gap:16px;
+  padding:0 40px;height:64px;
+  background:rgba(7,9,15,0.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(139,69,255,0.12);
+}
+.land-logo{display:flex;align-items:center;gap:10px;flex:1;}
+.land-logo-hex{width:36px;height:36px;background:linear-gradient(135deg,#00D4AA,#4A8DFF,#6B21F0,#C084FC);clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;}
+.land-logo-text{font-size:20px;font-weight:700;color:#F0F4FF;}
+.land-logo-text span{color:#8B45FF;}
+.land-nav-links{display:flex;gap:28px;}
+.land-nav-link{font-size:13px;color:rgba(240,244,255,0.6);cursor:pointer;transition:color 0.2s;text-decoration:none;}
+.land-nav-link:hover{color:#F0F4FF;}
+.land-nav-btns{display:flex;gap:10px;align-items:center;}
+.btn-login{padding:8px 20px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid rgba(139,69,255,0.3);background:rgba(107,33,240,0.1);color:#8B45FF;font-family:inherit;transition:all 0.2s;}
+.btn-login:hover{background:rgba(107,33,240,0.2);}
+.btn-signup{padding:8px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:linear-gradient(135deg,#6B21F0,#8B45FF);color:#fff;font-family:inherit;transition:all 0.2s;}
+.btn-signup:hover{opacity:0.9;transform:translateY(-1px);}
+
+/* HERO */
+.hero{
+  min-height:92vh;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:80px 40px;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse at 20% 30%,rgba(0,212,170,0.08),transparent 50%),
+             radial-gradient(ellipse at 80% 70%,rgba(107,33,240,0.12),transparent 50%),
+             radial-gradient(ellipse at 50% 50%,rgba(74,141,255,0.05),transparent 60%);
+}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(107,33,240,0.12);border:1px solid rgba(139,69,255,0.25);border-radius:20px;padding:6px 16px;font-size:12px;color:#8B45FF;font-weight:500;margin-bottom:24px;}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:#8B45FF;animation:pdot 2s infinite;}
+.hero-title{font-size:clamp(40px,6vw,80px);font-weight:800;color:#F0F4FF;line-height:1.1;margin-bottom:20px;}
+.hero-title .grad{background:linear-gradient(135deg,#18D9A2,#4A8DFF,#8B45FF,#C084FC);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{font-size:clamp(16px,2vw,20px);color:rgba(240,244,255,0.6);max-width:640px;margin:0 auto 36px;line-height:1.7;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:60px;}
+.hero-btn-primary{padding:16px 36px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;border:none;background:linear-gradient(135deg,#6B21F0,#8B45FF);color:#fff;font-family:inherit;transition:all 0.2s;}
+.hero-btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(107,33,240,0.4);}
+.hero-btn-secondary{padding:16px 36px;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;border:1px solid rgba(139,69,255,0.3);background:rgba(107,33,240,0.1);color:#8B45FF;font-family:inherit;transition:all 0.2s;}
+.hero-btn-secondary:hover{background:rgba(107,33,240,0.18);}
+.hero-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-val{font-size:28px;font-weight:800;font-family:'Noto Sans Mono',monospace;background:linear-gradient(135deg,#18D9A2,#8B45FF);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-stat-lbl{font-size:12px;color:rgba(240,244,255,0.45);margin-top:4px;text-transform:uppercase;letter-spacing:1px;}
+
+/* SECTIONS */
+.land-section{padding:100px 40px;max-width:1200px;margin:0 auto;}
+.land-section-title{font-size:clamp(28px,4vw,48px);font-weight:800;color:#F0F4FF;text-align:center;margin-bottom:12px;}
+.land-section-sub{font-size:16px;color:rgba(240,244,255,0.5);text-align:center;margin-bottom:60px;max-width:560px;margin-left:auto;margin-right:auto;}
+
+/* WHY ZENI CHAIN */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;}
+.why-card{
+  background:rgba(15,18,32,0.9);border:1px solid rgba(139,69,255,0.14);border-radius:20px;
+  padding:28px;position:relative;overflow:hidden;transition:all 0.3s;
+}
+.why-card:hover{border-color:rgba(139,69,255,0.35);transform:translateY(-4px);}
+.why-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--grad-s),var(--grad-e));opacity:0;transition:opacity 0.3s;}
+.why-card:hover::before{opacity:1;}
+.why-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px;}
+.why-title{font-size:18px;font-weight:700;color:#F0F4FF;margin-bottom:8px;}
+.why-sub{font-size:13px;color:rgba(240,244,255,0.55);line-height:1.7;}
+.why-tag{display:inline-block;font-size:10px;padding:3px 10px;border-radius:8px;font-family:monospace;font-weight:600;margin-top:12px;}
+
+/* ZENI ID SECTION */
+.zenid-wrap{
+  background:linear-gradient(135deg,rgba(107,33,240,0.08),rgba(0,212,170,0.06));
+  border:1px solid rgba(139,69,255,0.18);border-radius:28px;padding:60px 48px;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+}
+@media(max-width:768px){.zenid-wrap{grid-template-columns:1fr;gap:40px;padding:40px 24px;}}
+.zenid-platforms{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.zenid-platform{background:rgba(15,18,32,0.8);border:1px solid rgba(139,69,255,0.14);border-radius:14px;padding:16px;display:flex;align-items:center;gap:12px;transition:all 0.2s;}
+.zenid-platform:hover{border-color:rgba(139,69,255,0.3);}
+.zenid-platform-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.zenid-platform-name{font-size:13px;font-weight:600;color:#F0F4FF;}
+.zenid-platform-tag{font-size:10px;color:rgba(240,244,255,0.4);}
+.zenid-center{display:flex;align-items:center;justify-content:center;margin:16px 0;}
+
+/* ECOSYSTEM */
+.eco-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+.eco-card{background:rgba(15,18,32,0.85);border:1px solid rgba(139,69,255,0.12);border-radius:18px;padding:24px;text-align:center;transition:all 0.25s;cursor:default;}
+.eco-card:hover{border-color:rgba(139,69,255,0.3);transform:translateY(-3px);}
+.eco-icon{font-size:36px;margin-bottom:12px;}
+.eco-name{font-size:15px;font-weight:700;color:#F0F4FF;margin-bottom:4px;}
+.eco-desc{font-size:11px;color:rgba(240,244,255,0.45);line-height:1.5;}
+.eco-status{display:inline-block;font-size:9px;padding:3px 10px;border-radius:8px;margin-top:10px;font-family:monospace;}
+.eco-active{background:rgba(0,212,170,0.1);color:#00D4AA;border:1px solid rgba(0,212,170,0.2);}
+.eco-building{background:rgba(245,158,11,0.1);color:#F59E0B;border:1px solid rgba(245,158,11,0.2);}
+
+/* CTA */
+.cta-wrap{
+  background:linear-gradient(135deg,rgba(107,33,240,0.15),rgba(0,212,170,0.08));
+  border:1px solid rgba(139,69,255,0.2);border-radius:28px;
+  padding:80px 48px;text-align:center;
+}
+.land-footer{padding:40px;text-align:center;font-size:12px;color:rgba(240,244,255,0.25);border-top:1px solid rgba(139,69,255,0.1);}
+
+/* ═══ APP (hidden until logged in) ═══ */
+#app{display:none;height:100vh;overflow:hidden;}
+#app.visible{display:flex;}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;flex-shrink:0;background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;height:100vh;overflow-y:auto;
+  transition:transform 0.3s ease;z-index:150;
+}
+body.light .sidebar{background:rgba(248,250,255,0.94);border-right-color:rgba(107,33,240,0.1);}
+@media(max-width:768px){.sidebar{position:fixed;top:0;bottom:0;left:0;transform:translateX(-100%);}}
+.sidebar.open{transform:translateX(0)!important;box-shadow:8px 0 32px rgba(0,0,0,0.5);}
+
+.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border);}
+.logo-mark{display:flex;align-items:center;gap:10px;}
+.logo-hex{width:32px;height:32px;background:linear-gradient(135deg,#00D4AA,#4A8DFF,#6B21F0,#C084FC);clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);flex-shrink:0;}
+.logo-text{font-size:16px;font-weight:700;color:var(--white);}
+.logo-text span{color:var(--zeni2);}
+.logo-sub{font-size:9px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;font-family:'Noto Sans Mono',monospace;}
+body.light .logo-text{color:#0A0C1E;}
+
+.sidebar-nav{flex:1;padding:8px 0;overflow-y:auto;}
+.nav-section{margin-bottom:2px;}
+.nav-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(139,69,255,0.4);padding:8px 16px 4px;font-family:'Noto Sans Mono',monospace;}
+body.light .nav-label{color:rgba(107,33,240,0.4);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;border-left:3px solid transparent;transition:all 0.15s;margin:1px 0;}
+.nav-item:hover{background:rgba(139,69,255,0.07);}
+.nav-item.active{background:rgba(107,33,240,0.1);border-left-color:var(--c6b);}
+body.light .nav-item:hover{background:rgba(107,33,240,0.06);}
+body.light .nav-item.active{background:rgba(107,33,240,0.08);border-left-color:var(--zeni);}
+.nav-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;background:rgba(255,255,255,0.04);flex-shrink:0;}
+.nav-item.active .nav-icon{background:rgba(107,33,240,0.15);}
+.nav-text{font-size:12px;font-weight:500;color:var(--muted);flex:1;}
+.nav-item.active .nav-text{color:var(--c6b);font-weight:600;}
+body.light .nav-text{color:rgba(10,12,40,0.65);}
+body.light .nav-item.active .nav-text{color:var(--zeni);}
+.nav-badge{font-size:9px;padding:2px 7px;border-radius:8px;font-family:'Noto Sans Mono',monospace;font-weight:600;}
+.nav-badge-teal{background:rgba(0,212,170,0.12);color:#00D4AA;}
+.nav-badge-violet{background:rgba(107,33,240,0.14);color:#8B45FF;}
+
+.sidebar-footer{padding:12px;border-top:1px solid var(--border);margin-top:auto;}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;background:rgba(107,33,240,0.07);border:1px solid rgba(139,69,255,0.15);transition:all 0.2s;}
+.user-card:hover{background:rgba(107,33,240,0.14);border-color:rgba(139,69,255,0.35);}
+body.light .user-card{background:rgba(107,33,240,0.06);border-color:rgba(107,33,240,0.14);}
+.user-avatar{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#00D4AA,#4A8DFF,#6B21F0);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-name{font-size:12px;font-weight:600;color:var(--white);}
+.user-rank{font-size:10px;color:var(--c6b);}
+body.light .user-name{color:#0A0C1E;}
+body.light .user-rank{color:var(--zeni);}
+.settings-avatar{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#00D4AA,#4A8DFF,#6B21F0);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#fff;margin:0 auto 14px;}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.topbar{height:56px;display:flex;align-items:center;gap:10px;padding:0 20px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;z-index:100;}
+body.light .topbar{background:rgba(248,250,255,0.92);border-bottom-color:rgba(107,33,240,0.1);}
+.hamburger{display:none;font-size:20px;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:8px;}
+@media(max-width:768px){.hamburger{display:block;}}
+.topbar-title{font-size:15px;font-weight:600;color:var(--white);flex:1;}
+body.light .topbar-title{color:#0A0C1E;}
+.topbar-chain{display:flex;align-items:center;gap:7px;background:rgba(0,212,170,0.07);border:1px solid rgba(0,212,170,0.2);border-radius:20px;padding:5px 12px;font-size:11px;font-family:'Noto Sans Mono',monospace;}
+.chain-dot{width:6px;height:6px;border-radius:50%;background:#00D4AA;animation:pdot 2s infinite;}
+@keyframes pdot{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.topbar-block{color:#00D4AA;font-weight:500;}
+.topbar-muted{color:var(--muted);}
+
+/* Lang switcher */
+.lang-switcher{position:relative;}
+.lang-btn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;cursor:pointer;background:rgba(107,33,240,0.09);border:1px solid rgba(139,69,255,0.22);font-size:12px;color:var(--c6b);font-weight:600;transition:all 0.2s;}
+.lang-btn:hover{background:rgba(107,33,240,0.16);}
+.lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:8px;min-width:210px;z-index:9999;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:none;backdrop-filter:blur(24px);max-height:380px;overflow-y:auto;}
+.lang-dropdown.open{display:block;}
+.lang-opt{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;transition:all 0.15s;}
+.lang-opt:hover{background:rgba(107,33,240,0.1);}
+.lang-opt.active{background:rgba(107,33,240,0.15);}
+.lang-flag{font-size:16px;width:22px;text-align:center;flex-shrink:0;}
+.lang-name{font-size:12px;font-weight:500;color:var(--muted);flex:1;}
+.lang-opt.active .lang-name{color:var(--c6b);}
+.lang-check{font-size:11px;color:var(--c6b);}
+
+.topbar-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);transition:all 0.15s;position:relative;}
+.topbar-icon:hover{background:rgba(255,255,255,0.09);}
+.notif-dot{position:absolute;top:6px;right:7px;width:6px;height:6px;border-radius:50%;background:#E05252;border:2px solid var(--bg);}
+
+.content-area{flex:1;overflow:hidden;display:flex;}
+.screen{display:none;flex:1;overflow-y:auto;padding:24px;flex-direction:column;}
+.screen.active{display:flex;}
+@media(max-width:768px){.screen{padding:16px 12px 80px;}}
+
+/* SETTINGS TABS */
+.settings-tabs-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;flex-shrink:0;}
+.stab{padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:inherit;transition:all 0.2s;}
+.stab:hover{background:rgba(107,33,240,0.08);}
+.stab.active{background:rgba(107,33,240,0.15);color:var(--c6b);border-color:var(--c6b);}
+.stab-body{flex:1;}
+
+/* PAGE GRID */
+.page-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:20px;}
+.col-4{grid-column:1;}.col-6{grid-column:1;}.col-8{grid-column:2;}
+@media(max-width:1100px){.page-grid{grid-template-columns:1fr;}.col-4,.col-6,.col-8{grid-column:1;}}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;}
+body.light .card{background:rgba(255,255,255,0.88);border-color:rgba(107,33,240,0.09);}
+.card-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(139,69,255,0.5);font-family:'Noto Sans Mono',monospace;margin-bottom:14px;}
+body.light .card-title{color:rgba(107,33,240,0.55);}
+.section-title{font-size:15px;font-weight:700;color:var(--white);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+body.light .section-title{color:#0A0C1E;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;font-family:inherit;transition:all 0.2s;border:1px solid var(--border);background:rgba(255,255,255,0.05);color:var(--muted);}
+.btn:hover{background:rgba(255,255,255,0.09);}
+.btn-primary{background:linear-gradient(135deg,#6B21F0,#8B45FF);color:#fff;border:none;}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);box-shadow:0 6px 20px rgba(107,33,240,0.35);}
+.btn-secondary{background:rgba(107,33,240,0.12);color:var(--c6b);border-color:rgba(139,69,255,0.25);}
+.btn-ghost{background:transparent;color:var(--muted);border-color:var(--border);}
+
+/* INPUTS */
+.input-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(139,69,255,0.55);font-family:'Noto Sans Mono',monospace;margin-bottom:6px;display:block;}
+body.light .input-label{color:rgba(107,33,240,0.6);}
+.input-field{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--white);font-family:inherit;outline:none;transition:border-color 0.2s;}
+.input-field:focus{border-color:var(--c6b);}
+body.light .input-field{background:rgba(255,255,255,0.82);color:#0A0C1E;border-color:rgba(107,33,240,0.18);}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-info{flex:1;}
+.toggle-label{font-size:13px;font-weight:500;color:var(--white);}
+body.light .toggle-label{color:#0A0C1E;}
+.toggle-sub{font-size:11px;color:var(--dim);margin-top:2px;}
+.toggle-switch{width:36px;height:20px;border-radius:10px;background:rgba(255,255,255,0.1);position:relative;cursor:pointer;flex-shrink:0;transition:background 0.2s;}
+.toggle-switch.on{background:var(--c6b);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:white;transition:transform 0.2s;}
+.toggle-switch.on .toggle-thumb{transform:translateX(16px);}
+
+/* CHAIN INFO */
+.chain-info-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;}
+.chain-info-row:last-child{border-bottom:none;}
+.cir-key{color:rgba(139,69,255,0.6);font-size:12px;}
+body.light .cir-key{color:rgba(107,33,240,0.55);}
+.cir-val{color:var(--white);font-family:'Noto Sans Mono',monospace;font-size:12px;}
+body.light .cir-val{color:#0A0C1E;}
+.cir-val.green{color:var(--c4);}
+body.light .cir-val.green{color:#0CA87A;}
+.cir-val.blue{color:var(--c5b);}
+.cir-val.purple{color:var(--c6b);}
+
+/* FILTER CHIPS */
+.filter-chip{padding:6px 14px;border-radius:16px;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--dim);transition:all 0.15s;}
+.filter-chip.active{background:rgba(107,33,240,0.14);color:var(--c6b);border-color:var(--c6b);}
+body.light .filter-chip{background:rgba(255,255,255,0.7);color:rgba(10,12,40,0.6);}
+body.light .filter-chip.active{background:rgba(107,33,240,0.1);color:var(--zeni);border-color:var(--zeni);}
+
+/* STAT MINI */
+.stat-mini{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;padding:14px;}
+.stat-mini-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);font-family:'Noto Sans Mono',monospace;margin-bottom:6px;}
+.stat-mini-value{font-size:22px;font-weight:700;color:var(--white);font-family:'Noto Sans Mono',monospace;}
+.stat-mini-sub{font-size:11px;color:var(--dim);margin-top:4px;}
+body.light .stat-mini-value{color:#0A0C1E;}
+
+/* MISC */
+.prog-track{height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;}
+body.light .prog-track{background:rgba(107,33,240,0.1);}
+.prog-fill{height:100%;border-radius:3px;}
+.tx-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.tx-item:last-child{border-bottom:none;}
+.tx-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.tx-name{font-size:13px;font-weight:500;color:var(--white);}
+body.light .tx-name{color:#0A0C1E;}
+.tx-meta{font-size:11px;color:var(--dim);margin-top:2px;}
+.status-tag{font-size:10px;padding:2px 8px;border-radius:6px;font-family:'Noto Sans Mono',monospace;font-weight:500;}
+.status-released{background:rgba(0,212,170,0.1);color:#00D4AA;}
+.status-escrow{background:rgba(245,158,11,0.1);color:#F59E0B;}
+.escrow-banner{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.22);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.upload-zone{border:2px dashed rgba(107,33,240,0.25);border-radius:12px;padding:28px;text-align:center;cursor:pointer;background:rgba(107,33,240,0.03);transition:all 0.2s;}
+.upload-zone:hover{border-color:rgba(107,33,240,0.5);}
+
+/* Balance hero */
+.balance-hero{background:linear-gradient(135deg,rgba(15,22,40,0.85),rgba(26,16,46,0.8));border:1px solid rgba(139,69,255,0.2);border-radius:20px;padding:24px;margin-bottom:16px;}
+body.light .balance-hero{background:linear-gradient(135deg,rgba(228,225,255,0.85),rgba(212,232,255,0.82));border-color:rgba(107,33,240,0.2);}
+.balance-amount{font-size:40px;font-weight:700;color:var(--white);font-family:'Noto Sans Mono',monospace;line-height:1;}
+body.light .balance-amount{background:linear-gradient(135deg,#4A00C0,#6B21F0,#0CA87A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.balance-token{font-size:13px;color:var(--c4);margin:4px 0;}
+body.light .balance-token{color:#0CA87A;}
+
+/* Rank hero */
+.rank-hero{background:linear-gradient(160deg,#1a0840,#0d1560,#1a0048);border:2px solid rgba(167,139,250,0.45);border-radius:20px;padding:24px;text-align:center;position:relative;overflow:hidden;margin-bottom:14px;}
+body.light .rank-hero{background:linear-gradient(160deg,#E8E0FF,#D4EAFF,#E0F8F0);border-color:rgba(139,69,255,0.4);}
+.rank-name{font-size:22px;font-weight:800;background:linear-gradient(135deg,#fff,#C4B5FD,#818CF8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+body.light .rank-name{background:none;-webkit-text-fill-color:#4A00C0;color:#4A00C0;}
+.rank-sub{font-size:12px;color:rgba(240,244,255,0.45);margin-bottom:14px;}
+body.light .rank-sub{color:rgba(10,12,40,0.55);}
+.rank-pill{font-size:11px;padding:4px 12px;border-radius:12px;background:rgba(107,33,240,0.15);color:var(--c6b);border:1px solid rgba(139,69,255,0.25);}
+body.light .rank-pill{background:rgba(107,33,240,0.1);color:#4A00C0;}
+.aff-code-wrap{background:linear-gradient(135deg,rgba(139,69,255,0.1),rgba(192,132,252,0.07));border:1px solid rgba(192,132,252,0.25);border-radius:14px;padding:16px;text-align:center;margin-bottom:14px;}
+body.light .aff-code-wrap{background:rgba(107,33,240,0.06);}
+.aff-code-label{font-size:10px;letter-spacing:2.5px;color:rgba(192,132,252,0.7);font-family:'Noto Sans Mono',monospace;margin-bottom:8px;}
+body.light .aff-code-label{color:rgba(107,33,240,0.6);}
+.aff-code-text{font-size:20px;font-family:'Noto Sans Mono',monospace;font-weight:800;letter-spacing:3px;background:linear-gradient(135deg,#fff,#C4B5FD,#818CF8,#67E8F9);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+body.light .aff-code-text{background:linear-gradient(135deg,#4A00C0,#6B21F0,#0CA87A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* Pool */
+.pool-section-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;}
+body.light .pool-section-wrap{background:rgba(255,255,255,0.85);}
+.pool-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px;text-align:center;transition:all 0.2s;}
+body.light .pool-card{background:rgba(255,255,255,0.75);border-color:rgba(107,33,240,0.1);}
+.pool-svg{display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.pool-name{font-size:13px;font-weight:600;color:var(--white);margin-bottom:4px;}
+body.light .pool-name{color:#0A0C1E;}
+.pool-pct{font-size:12px;font-weight:700;color:var(--c6b);font-family:'Noto Sans Mono',monospace;margin-bottom:4px;}
+body.light .pool-pct{color:var(--zeni);}
+.pool-cond{font-size:10px;color:var(--dim);font-family:'Noto Sans Mono',monospace;}
+.locked-pool{opacity:0.4;}
+
+/* Bottom nav */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--bg2);border-top:1px solid var(--border);z-index:200;backdrop-filter:blur(20px);}
+body.light .bottom-nav{background:rgba(248,250,255,0.95);}
+@media(max-width:768px){.bottom-nav{display:flex;align-items:center;justify-content:space-around;padding:0 4px;}}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;cursor:pointer;border-radius:10px;flex:1;transition:all 0.15s;}
+.bnav-item.active{background:rgba(107,33,240,0.1);}
+.bnav-icon{font-size:18px;}
+.bnav-label{font-size:9px;color:var(--dim);font-weight:500;}
+.bnav-item.active .bnav-label{color:var(--c6b);}
+
+/* Chat FAB */
+.chat-fab{position:fixed;bottom:80px;right:20px;width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#6B21F0,#8B45FF);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:300;box-shadow:0 8px 24px rgba(107,33,240,0.4);transition:all 0.2s;}
+.chat-fab:hover{transform:scale(1.08);}
+@media(max-width:768px){.chat-fab{bottom:72px;right:12px;}}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(10px);z-index:2000;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:28px;width:440px;max-width:92vw;max-height:90vh;overflow-y:auto;}
+body.light .modal-box{background:rgba(252,253,255,0.97);}
+
+/* Staking, analytics misc */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+.kpi-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;}
+body.light .kpi-card{background:rgba(255,255,255,0.85);}
+.kpi-label{font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;font-family:'Noto Sans Mono',monospace;}
+.kpi-value{font-size:24px;font-weight:900;font-family:'Noto Sans Mono',monospace;color:var(--white);}
+body.light .kpi-value{color:#0A0C1E;}
+.kpi-up{color:var(--c4);}
+
+/* Overlay */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:140;}
+@media(max-width:768px){.sidebar-overlay.show{display:block;}}
+
+/* onchain */
+.onchain-tx{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px;margin-bottom:8px;}
+body.light .onchain-tx{background:rgba(255,255,255,0.75);border-color:rgba(107,33,240,0.08);}
+.hash-val{font-size:11px;font-family:'Noto Sans Mono',monospace;color:var(--c5b);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+body.light .hash-val{color:#2E7DE0;}
+.tx-tag-chip{font-size:10px;padding:3px 10px;border-radius:8px;font-family:'Noto Sans Mono',monospace;font-weight:500;}
+.tag-affiliate{background:rgba(0,212,170,0.1);color:var(--c4);}
+.tag-pool{background:rgba(107,33,240,0.1);color:var(--c6b);}
+.tag-nft{background:rgba(74,141,255,0.1);color:var(--c5b);}
+.tag-xp{background:rgba(245,158,11,0.1);color:#F59E0B;}
+.tag-clawback{background:rgba(224,82,82,0.1);color:var(--red);}
+
+/* Badge items */
+.badge-item{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px;text-align:center;transition:all 0.2s;}
+body.light .badge-item{background:rgba(255,255,255,0.78);border-color:rgba(107,33,240,0.09);}
+.badge-name{font-size:12px;font-weight:600;color:var(--white);margin-top:8px;}
+body.light .badge-name{color:#0A0C1E;}
+.badge-id{font-size:10px;font-family:'Noto Sans Mono',monospace;margin-top:2px;}
+.badge-id.owned{color:var(--c6b);}
+body.light .badge-id.owned{color:var(--zeni);}
+.badge-id.locked{color:var(--dim);}
+.badge-id.legendary{color:var(--red);}
+.badge-owned{border-color:rgba(139,69,255,0.3)!important;}
+
+/* === CARD HOVER === */
+.card{transition:transform 0.2s ease,box-shadow 0.2s ease;}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.15);}
+
+/* === HORIZONTAL ECOSYSTEM MENU === */
+.horiz-menu{display:flex;gap:2px;padding:0 20px;height:36px;align-items:center;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;}
+.hmenu-item{position:relative;padding:6px 14px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;border-radius:8px;transition:all 0.15s;white-space:nowrap;}
+.hmenu-item:hover{background:rgba(107,33,240,0.1);color:var(--c6b);}
+.hmenu-drop{display:none;position:absolute;top:100%;left:0;min-width:320px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:8px;z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,0.5);backdrop-filter:blur(20px);}
+.hmenu-item:hover .hmenu-drop{display:block;}
+.hmenu-drop a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;transition:all 0.15s;text-decoration:none;}
+.hmenu-drop a:hover{background:rgba(107,33,240,0.1);color:var(--white);}
+.eco-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.eco-badge{font-size:9px;padding:2px 8px;border-radius:8px;font-weight:600;margin-left:auto;}
+.eco-badge.active{background:rgba(0,212,170,0.12);color:#00D4AA;}
+.eco-badge.building{background:rgba(245,158,11,0.12);color:#F59E0B;}
+.hmenu-footer{border-top:1px solid var(--border);margin-top:4px;padding-top:8px;}
+.hmenu-footer a{color:var(--c6b);font-weight:600;}
+body.light .horiz-menu{background:rgba(248,250,255,0.94);}
+body.light .hmenu-drop{background:rgba(252,253,255,0.97);box-shadow:0 16px 48px rgba(0,0,0,0.1);}
+@media(max-width:768px){.horiz-menu{display:none;}}
+
+</style>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ════════════════════ LANDING PAGE ════════════════════ -->
+<div id="landing">
+  <!-- NAV -->
+  <nav class="land-nav">
+    <div class="land-logo">
+      <div class="land-logo-hex">Z</div>
+      <div>
+        <div class="land-logo-text">Zeni<span> Chain</span></div>
+      </div>
+    </div>
+    <div class="land-nav-links" id="nav-links">
+      <a class="land-nav-link" onclick="scrollTo('why')">Điểm mạnh</a>
+      <a class="land-nav-link" onclick="scrollTo('zenid')">Zeni ID</a>
+      <a class="land-nav-link" onclick="scrollTo('eco')">Hệ sinh thái</a>
+      <a class="land-nav-link" onclick="scrollTo('token')">Tokenomics</a>
+    </div>
+    <div class="land-nav-btns">
+      <button class="btn-login" onclick="showLogin()">Đăng nhập</button>
+      <button class="btn-signup" onclick="showRegister()">Đăng ký ngay</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="hero-badge"><div class="hero-badge-dot"></div>Polygon CDK · ASEAN Wellness Web3</div>
+      <h1 class="hero-title">Blockchain dành cho<br><span class="grad">Wellness & Commerce</span><br>ASEAN</h1>
+      <p class="hero-sub">Zeni Chain là nền tảng Web3 duy nhất có real utility từ hệ sinh thái wellness thật — không đầu cơ, không farming. Kiếm $Zeni từ doanh số thật, đổi XP lấy dịch vụ thật.</p>
+      <div class="hero-btns">
+        <button class="hero-btn-primary" onclick="showRegister()">🚀 Bắt đầu miễn phí</button>
+        <button class="hero-btn-secondary" onclick="enterDemo()">Xem Demo →</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-val">20.3M</div><div class="hero-stat-lbl">$Zeni Staked</div></div>
+        <div class="hero-stat"><div class="hero-stat-val">5,500+</div><div class="hero-stat-lbl">KOC Network</div></div>
+        <div class="hero-stat"><div class="hero-stat-val">45.2tr</div><div class="hero-stat-lbl">GMV / Tháng</div></div>
+        <div class="hero-stat"><div class="hero-stat-val">&lt;0.001</div><div class="hero-stat-lbl">Gas Fee ($Zeni)</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY ZENI CHAIN -->
+  <section class="land-section" id="why">
+    <h2 class="land-section-title">Tại sao Zeni Chain?</h2>
+    <p class="land-section-sub">Những điểm khác biệt mà không chain nào có được</p>
+    <div class="why-grid">
+      <div class="why-card" style="--grad-s:#00D4AA;--grad-e:#4A8DFF;">
+        <div class="why-icon" style="background:rgba(0,212,170,0.1);">💡</div>
+        <div class="why-title">Real Utility — Không đầu cơ</div>
+        <div class="why-sub">$Zeni được earn từ doanh số thật (ANIMA Care, WellKOC, Biotea84), không phải farming ảo. Token có demand thật từ voucher dịch vụ, gas fee, governance.</div>
+        <div class="why-tag" style="background:rgba(0,212,170,0.1);color:#00D4AA;">Không có chain nào làm được</div>
+      </div>
+      <div class="why-card" style="--grad-s:#8B45FF;--grad-e:#C084FC;">
+        <div class="why-icon" style="background:rgba(107,33,240,0.12);">🤝</div>
+        <div class="why-title">KOC Network On-Chain</div>
+        <div class="why-sub">30% hoa hồng F1 + Revenue sharing nhóm on-chain. Escrow tự động 7 ngày, clawback smart contract. Affiliate không thể gian lận, minh bạch 100% trên blockchain.</div>
+        <div class="why-tag" style="background:rgba(107,33,240,0.1);color:#8B45FF;">Proof-of-Referral NFT</div>
+      </div>
+      <div class="why-card" style="--grad-s:#4A8DFF;--grad-e:#00D4AA;">
+        <div class="why-icon" style="background:rgba(74,141,255,0.1);">🪪</div>
+        <div class="why-title">Zeni ID — 1 tài khoản toàn hệ sinh thái</div>
+        <div class="why-sub">Như Google Account: đăng ký 1 lần, KYC 1 lần, dùng được toàn bộ 5 platform trong hệ sinh thái Zeni. Không cần tạo tài khoản riêng cho từng app.</div>
+        <div class="why-tag" style="background:rgba(74,141,255,0.1);color:#4A8DFF;">SSO · Decentralized Identity</div>
+      </div>
+      <div class="why-card" style="--grad-s:#F59E0B;--grad-e:#EF4444;">
+        <div class="why-icon" style="background:rgba(245,158,11,0.1);">🎟</div>
+        <div class="why-title">NFT Voucher — Đổi XP lấy dịch vụ thật</div>
+        <div class="why-sub">XP earn từ mỗi đơn hàng → Mint NFT Voucher → Đổi lấy dịch vụ ANIMA Care (khám bệnh, sản phẩm 119, đào tạo KTV). Không có chain nào có wellness voucher thật.</div>
+        <div class="why-tag" style="background:rgba(245,158,11,0.1);color:#F59E0B;">ERC-1155 Soul-bound</div>
+      </div>
+      <div class="why-card" style="--grad-s:#00D4AA;--grad-e:#8B45FF;">
+        <div class="why-icon" style="background:rgba(0,212,170,0.1);">⚡</div>
+        <div class="why-title">Polygon CDK + AggLayer</div>
+        <div class="why-sub">Gas fee dưới 0.001 $Zeni. Finality dưới 2 giây. Settlement về Ethereum L1. ~2,400 TPS. Không cần tự build security — kế thừa từ Polygon ecosystem.</div>
+        <div class="why-tag" style="background:rgba(0,212,170,0.1);color:#00D4AA;">2s Finality · L2 Security</div>
+      </div>
+      <div class="why-card" style="--grad-s:#A855F7;--grad-e:#4A8DFF;">
+        <div class="why-icon" style="background:rgba(168,85,247,0.1);">🌏</div>
+        <div class="why-title">ASEAN-Native · 12 Ngôn ngữ</div>
+        <div class="why-sub">VI · EN · ZH · JA · KO · TH · ID · MS · HI · AR · KM · LO. Giao diện, pháp lý, và cộng đồng được thiết kế cho Đông Nam Á và SGX IPO 2031.</div>
+        <div class="why-tag" style="background:rgba(168,85,247,0.1);color:#A855F7;">SGX IPO 2031 · $3.8B Target</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ZENI ID SECTION -->
+  <section class="land-section" id="zenid" style="padding-top:0;">
+    <div class="zenid-wrap">
+      <div>
+        <div style="font-size:12px;letter-spacing:2px;color:#8B45FF;font-family:monospace;margin-bottom:12px;">ZENI ID · DECENTRALIZED SSO</div>
+        <h2 style="font-size:clamp(28px,4vw,42px);font-weight:800;color:#F0F4FF;margin-bottom:16px;">1 tài khoản.<br>Toàn bộ hệ sinh thái.</h2>
+        <p style="font-size:15px;color:rgba(240,244,255,0.55);line-height:1.8;margin-bottom:24px;">Như Google Account — bạn có 1 tài khoản Google có thể vào Gmail, YouTube, Google Meet. Zeni ID là 1 tài khoản cho toàn hệ sinh thái Zeni Holdings.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:32px;height:32px;border-radius:50%;background:rgba(0,212,170,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">✓</div><div style="font-size:14px;color:rgba(240,244,255,0.8);">Đăng ký <strong>1 lần</strong> — dùng được toàn bộ 5 platform</div></div>
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:32px;height:32px;border-radius:50%;background:rgba(107,33,240,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">✓</div><div style="font-size:14px;color:rgba(240,244,255,0.8);">KYC <strong>1 lần</strong> — chính chủ, không thể có 2 tài khoản</div></div>
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:32px;height:32px;border-radius:50%;background:rgba(74,141,255,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">✓</div><div style="font-size:14px;color:rgba(240,244,255,0.8);">Phí riêng theo platform — trả phí Pro trên platform nào thì dùng platform đó</div></div>
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:32px;height:32px;border-radius:50%;background:rgba(168,85,247,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">✓</div><div style="font-size:14px;color:rgba(240,244,255,0.8);">$Zeni token và XP chảy xuyên suốt toàn bộ hệ sinh thái</div></div>
+        </div>
+        <button class="btn-signup" onclick="showRegister()" style="padding:14px 32px;font-size:15px;">Tạo Zeni ID ngay →</button>
+      </div>
+      <div>
+        <div style="text-align:center;margin-bottom:20px;font-size:13px;color:rgba(240,244,255,0.4);font-family:monospace;letter-spacing:1px;">ZENI ID · ZNI-TMD-00421 ────────</div>
+        <div class="zenid-platforms">
+          <div class="zenid-platform"><div class="zenid-platform-icon" style="background:rgba(0,212,170,0.12);">🏥</div><div><div class="zenid-platform-name">ANIMA Care</div><div class="zenid-platform-tag">Wellness · Miễn phí</div></div></div>
+          <div class="zenid-platform"><div class="zenid-platform-icon" style="background:rgba(107,33,240,0.12);">🎯</div><div><div class="zenid-platform-name">WellKOC</div><div class="zenid-platform-tag">Commerce · Pro 19$/th</div></div></div>
+          <div class="zenid-platform"><div class="zenid-platform-icon" style="background:rgba(0,212,170,0.12);">🍃</div><div><div class="zenid-platform-name">Biotea84</div><div class="zenid-platform-tag">Marketplace · Free</div></div></div>
+          <div class="zenid-platform"><div class="zenid-platform-icon" style="background:rgba(74,141,255,0.12);">💻</div><div><div class="zenid-platform-name">Zeni Digital</div><div class="zenid-platform-tag">SaaS · Theo gói</div></div></div>
+          <div class="zenid-platform"><div class="zenid-platform-icon" style="background:rgba(245,158,11,0.12);">🏗</div><div><div class="zenid-platform-name">NexBuild</div><div class="zenid-platform-tag">Construction · Pro</div></div></div>
+          <div class="zenid-platform" style="background:rgba(107,33,240,0.06);border-style:dashed;"><div class="zenid-platform-icon" style="background:rgba(107,33,240,0.1);">⛓</div><div><div class="zenid-platform-name" style="color:#8B45FF;">Zeni Chain</div><div class="zenid-platform-tag">Infrastructure</div></div></div>
+        </div>
+        <div style="text-align:center;margin-top:16px;font-size:11px;color:rgba(240,244,255,0.3);">🔒 1 Zeni ID · KYC 1 lần · Bảo mật AES-256</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ECOSYSTEM -->
+  <section class="land-section" id="eco" style="padding-top:0;">
+    <h2 class="land-section-title">Hệ sinh thái Zeni Holdings</h2>
+    <p class="land-section-sub">5 platform, 1 infrastructure, 1 token, 1 tài khoản</p>
+    <div class="eco-grid">
+      <div class="eco-card"><div class="eco-icon">🏥</div><div class="eco-name">ANIMA Care Global</div><div class="eco-desc">Chuỗi Wellness: Clinics · KTV · ANIMA 119 · Đào tạo</div><div class="eco-status eco-active">Active</div></div>
+      <div class="eco-card"><div class="eco-icon">🎯</div><div class="eco-name">WellKOC</div><div class="eco-desc">Social Commerce: KOC Network · Live · Affiliate · NFT</div><div class="eco-status eco-active">Active</div></div>
+      <div class="eco-card"><div class="eco-icon">🍃</div><div class="eco-name">Biotea84</div><div class="eco-desc">Supply Chain Trà: Vùng nguyên liệu → Marketplace B2B</div><div class="eco-status eco-active">Active</div></div>
+      <div class="eco-card"><div class="eco-icon">💻</div><div class="eco-name">Zeni Digital</div><div class="eco-desc">SaaS: ZeniOS · ZeniERP · ZeniPay · Zeni Studio · Media</div><div class="eco-status eco-building">Building</div></div>
+      <div class="eco-card"><div class="eco-icon">🏗</div><div class="eco-name">NexBuild Holdings</div><div class="eco-desc">Construction Tech: 11 modules · BIM · Digital Twin</div><div class="eco-status eco-building">2028</div></div>
+    </div>
+  </section>
+
+  <!-- TOKENOMICS -->
+  <section class="land-section" id="token" style="padding-top:0;">
+    <h2 class="land-section-title">Tokenomics $Zeni</h2>
+    <p class="land-section-sub">1 tỷ hard cap · Polygon Chain · Real demand từ hệ sinh thái</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
+      <div style="background:rgba(15,18,32,0.9);border:1px solid rgba(0,212,170,0.15);border-radius:18px;padding:24px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#00D4AA;font-family:monospace;">1B</div><div style="font-size:12px;color:rgba(240,244,255,0.45);margin-top:6px;">Hard Cap · Không vượt</div></div>
+      <div style="background:rgba(15,18,32,0.9);border:1px solid rgba(107,33,240,0.15);border-radius:18px;padding:24px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#8B45FF;font-family:monospace;">30%</div><div style="font-size:12px;color:rgba(240,244,255,0.45);margin-top:6px;">Community Reward</div></div>
+      <div style="background:rgba(15,18,32,0.9);border:1px solid rgba(74,141,255,0.15);border-radius:18px;padding:24px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#4A8DFF;font-family:monospace;">28%</div><div style="font-size:12px;color:rgba(240,244,255,0.45);margin-top:6px;">APY Diamond Pool</div></div>
+      <div style="background:rgba(15,18,32,0.9);border:1px solid rgba(168,85,247,0.15);border-radius:18px;padding:24px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#A855F7;font-family:monospace;">10%</div><div style="font-size:12px;color:rgba(240,244,255,0.45);margin-top:6px;">Founder · Dual 10x vote</div></div>
+      <div style="background:rgba(15,18,32,0.9);border:1px solid rgba(245,158,11,0.15);border-radius:18px;padding:24px;text-align:center;"><div style="font-size:28px;font-weight:800;color:#F59E0B;font-family:monospace;">18.2M</div><div style="font-size:12px;color:rgba(240,244,255,0.45);margin-top:6px;">DAO Treasury</div></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="land-section" style="padding-top:0;">
+    <div class="cta-wrap">
+      <h2 style="font-size:clamp(28px,4vw,48px);font-weight:800;color:#F0F4FF;margin-bottom:16px;">Tham gia ngay hôm nay</h2>
+      <p style="font-size:16px;color:rgba(240,244,255,0.55);margin-bottom:36px;max-width:500px;margin-left:auto;margin-right:auto;">Tạo Zeni ID miễn phí. KYC 1 lần. Dùng được toàn bộ hệ sinh thái Zeni Holdings.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <button class="hero-btn-primary" onclick="showRegister()">🚀 Tạo Zeni ID miễn phí</button>
+        <button class="hero-btn-secondary" onclick="enterDemo()">Xem Demo App →</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="land-footer">
+    Zeni Chain · Polygon CDK · chain.zeni.holdings · © 2026 Zeni Holdings. SGX IPO Target 2031.
+  </footer>
+</div>
+
+<!-- ════════════════════ AUTH MODAL ════════════════════ -->
+<div id="auth-modal" class="modal-overlay">
+  <div class="modal-box" style="max-width:420px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <div id="auth-title" style="font-size:20px;font-weight:700;color:var(--white);">Đăng nhập</div>
+      <div onclick="closeAuth()" style="cursor:pointer;color:var(--dim);font-size:24px;line-height:1;padding:4px;">×</div>
+    </div>
+    
+    <!-- Login form -->
+    <div id="form-login">
+      <div style="margin-bottom:12px;"><label class="input-label">Email / Số điện thoại</label><input id="auth-email" class="input-field" type="text" placeholder="email@example.com" style="width:100%"></div>
+      <div style="margin-bottom:20px;"><label class="input-label">Mật khẩu</label><input id="auth-pw" class="input-field" type="password" placeholder="••••••••" style="width:100%" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div id="auth-error" style="display:none;padding:10px 14px;background:rgba(224,82,82,0.1);border:1px solid rgba(224,82,82,0.25);border-radius:10px;font-size:12px;color:#E05252;margin-bottom:14px;"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px;" onclick="doLogin()">Đăng nhập →</button>
+      <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--dim);">Chưa có tài khoản? <span style="color:var(--c6b);cursor:pointer;" onclick="switchToRegister()">Đăng ký ngay</span></div>
+      <div style="margin-top:16px;padding:12px;background:rgba(0,212,170,0.06);border-radius:10px;font-size:11px;color:var(--c4);text-align:center;">Demo: duc@zeni.holdings / Zeni@2026</div>
+    </div>
+    
+    <!-- Register form -->
+    <div id="form-register" style="display:none;">
+      <div style="margin-bottom:12px;"><label class="input-label">Họ và tên</label><input class="input-field" placeholder="Nguyễn Văn A" style="width:100%"></div>
+      <div style="margin-bottom:12px;"><label class="input-label">Email</label><input class="input-field" type="email" placeholder="email@example.com" style="width:100%"></div>
+      <div style="margin-bottom:12px;"><label class="input-label">Số điện thoại</label><input class="input-field" type="tel" placeholder="09xx xxx xxx" style="width:100%"></div>
+      <div style="margin-bottom:20px;"><label class="input-label">Mật khẩu</label><input class="input-field" type="password" placeholder="Tối thiểu 8 ký tự" style="width:100%"></div>
+      <div style="margin-bottom:16px;padding:12px;background:rgba(0,212,170,0.06);border:1px solid rgba(0,212,170,0.15);border-radius:10px;font-size:12px;color:var(--c4);">✓ Tạo Zeni ID — dùng được toàn bộ hệ sinh thái Zeni Holdings</div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px;" onclick="enterDemo()">Tạo tài khoản →</button>
+      <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--dim);">Đã có tài khoản? <span style="color:var(--c6b);cursor:pointer;" onclick="switchToLogin()">Đăng nhập</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ APP ════════════════════ -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-hex"></div>
+        <div>
+          <div class="logo-text">Zeni<span> Chain</span></div>
+          <div class="logo-sub">Polygon · Web3</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-label">Tổng quan</div>
+        <div class="nav-item active" onclick="goTo('dashboard')"><div class="nav-icon">🏠</div><div class="nav-text">Dashboard</div></div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Tài sản</div>
+        <div class="nav-item" onclick="goTo('wallet')"><div class="nav-icon">💎</div><div class="nav-text">Ví & Tài sản</div></div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Kinh doanh</div>
+        <div class="nav-item" onclick="goTo('affiliate')"><div class="nav-icon">🤝</div><div class="nav-text">Affiliate</div></div>
+        <div class="nav-item" onclick="goTo('voucher')"><div class="nav-icon">🎟</div><div class="nav-text">NFT Voucher</div></div>
+        <div class="nav-item" onclick="goTo('pools')"><div class="nav-icon">🌐</div><div class="nav-text">Pool Đại Sứ</div></div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Blockchain</div>
+        <div class="nav-item" onclick="goTo('onchain')"><div class="nav-icon">⛓</div><div class="nav-text">On-Chain</div></div>
+        <div class="nav-item" onclick="goTo('nfts')"><div class="nav-icon">🏅</div><div class="nav-text">NFT Badges</div></div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Tăng trưởng</div>
+        <div class="nav-item" onclick="goTo('staking')"><div class="nav-icon">🔒</div><div class="nav-text">Staking</div><span class="nav-badge nav-badge-teal">28%</span></div>
+        <div class="nav-item" onclick="goTo('governance')"><div class="nav-icon">🗳</div><div class="nav-text">Governance</div><span class="nav-badge nav-badge-violet">DAO</span></div>
+        <div class="nav-item" onclick="goTo('analytics')"><div class="nav-icon">📈</div><div class="nav-text">Analytics</div></div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Hệ thống</div>
+        <div class="nav-item" onclick="goTo('admin')"><div class="nav-icon">⚙️</div><div class="nav-text">Admin Panel</div></div>
+        <div class="nav-item" onclick="goTo('settings')"><div class="nav-icon">👤</div><div class="nav-text">Tài khoản</div></div>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card" onclick="goTo('settings')" title="Tài khoản & KYC">
+        <div class="user-avatar" id="user-avatar">T</div>
+        <div style="flex:1;">
+          <div class="user-name" id="user-name">Thiên Mộc Đức</div>
+          <div class="user-rank" id="user-rank">💎 KOC Pro</div>
+        </div>
+        <div style="font-size:16px;color:var(--c6b);">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="hamburger" onclick="toggleSidebar()">☰</div>
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-chain">
+        <div class="chain-dot"></div>
+        <span class="topbar-muted">Zeni Chain</span>
+        <span class="topbar-block">4,821,043</span>
+      </div>
+      <div class="lang-switcher">
+        <div class="lang-btn" onclick="toggleLangDropdown(event)">
+          <span id="lang-btn-flag">🇻🇳</span>
+          <span id="lang-btn-text">VI</span>
+          <span style="font-size:9px;opacity:0.5;">▾</span>
+        </div>
+        <div class="lang-dropdown" id="lang-dropdown">
+          <div class="lang-opt active" data-lc="VI" onclick="applyLang('VI');closeLangDropdown()"><span class="lang-flag">🇻🇳</span><span class="lang-name">Tiếng Việt</span><span class="lang-check" id="lc-VI">✓</span></div>
+          <div class="lang-opt" data-lc="EN" onclick="applyLang('EN');closeLangDropdown()"><span class="lang-flag">🇺🇸</span><span class="lang-name">English</span><span class="lang-check" id="lc-EN" style="display:none">✓</span></div>
+          <div class="lang-opt" data-lc="ZH" onclick="applyLang('ZH');closeLangDropdown()"><span class="lang-flag">🇨🇳</span><span class="lang-name">中文</span><span class="lang-check" id="lc-ZH" style="display:none">✓</span></div>
+          <div class="lang-opt" data-lc="JA" onclick="applyLang('JA');closeLangDropdown()"><span class="lang-flag">🇯🇵</span><span class="lang-name">日本語</span><span class="lang-check" id="lc-JA" style="display:none">✓</span></div>
+          <div class="lang-opt" data-lc="KO" onclick="applyLang('KO');closeLangDropdown()"><span class="lang-flag">🇰🇷</span><span class="lang-name">한국어</span><span class="lang-check" id="lc-KO" style="display:none">✓</span></div>
+          <div class="lang-opt" data-lc="TH" onclick="applyLang('TH');closeLangDropdown()"><span class="lang-flag">🇹🇭</span><span class="lang-name">ภาษาไทย</span><span class="lang-check" id="lc-TH" style="display:none">✓</span></div>
+          <div class="lang-opt" data-lc="ID" onclick="applyLang('ID');closeLangDropdown()"><span class="lang-flag">🇮🇩</span><span class="lang-name">Bahasa Indonesia</span><span class="lang-check" id="lc-ID" style="display:none">✓</span></div>
+          <div class="lang-opt" data-lc="MS" onclick="applyLang('MS');closeLangDropdown()"><span class="lang-flag">🇲🇾</span><span class="lang-name">Bahasa Melayu</span><span class="lang-check" id="lc-MS" style="display:none">✓</span></div>
+          <div class="lang-opt" data-lc="HI" onclick="applyLang('HI');closeLangDropdown()"><span class="lang-flag">🇮🇳</span><span class="lang-name">हिंदी</span><span class="lang-check" id="lc-HI" style="display:none">✓</span></div>
+          <div class="lang-opt" data-lc="AR" onclick="applyLang('AR');closeLangDropdown()"><span class="lang-flag">🇦🇪</span><span class="lang-name">العربية</span><span class="lang-check" id="lc-AR" style="display:none">✓</span></div>
+          <div class="lang-opt" data-lc="KM" onclick="applyLang('KM');closeLangDropdown()"><span class="lang-flag">🇰🇭</span><span class="lang-name">ភាសាខ្មែរ</span><span class="lang-check" id="lc-KM" style="display:none">✓</span></div>
+          <div class="lang-opt" data-lc="LO" onclick="applyLang('LO');closeLangDropdown()"><span class="lang-flag">🇱🇦</span><span class="lang-name">ພາສາລາວ</span><span class="lang-check" id="lc-LO" style="display:none">✓</span></div>
+        </div>
+      </div>
+      <div class="topbar-icon" onclick="toggleTheme()" id="theme-btn" title="Light/Dark">🌙</div>
+      <div class="topbar-icon">🔔<div class="notif-dot"></div></div>
+    </div>
+
