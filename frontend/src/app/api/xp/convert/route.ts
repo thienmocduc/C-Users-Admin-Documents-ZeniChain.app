@@ -1,32 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin, XP_RATES } from "@/lib/supabase";
-import { ethers } from "ethers";
-import { ZENI_TOKEN, POLYGON_RPC } from "@/lib/contracts";
+
+// Rate limiter
+const rateMap = new Map<string, { count: number; resetAt: number }>();
+function checkRateLimit(key: string): boolean {
+  const now = Date.now();
+  const entry = rateMap.get(key);
+  if (!entry || now > entry.resetAt) {
+    rateMap.set(key, { count: 1, resetAt: now + 60_000 });
+    return true;
+  }
+  if (entry.count >= 10) return false; // Stricter: 10 converts/min
+  entry.count++;
+  return true;
+}
 
 /**
  * POST /api/xp/convert
- * Convert XP → ZENI on-chain
- *
- * Body: { user_id, platform, xp_amount }
- * Returns: { zeni_amount, tx_hash }
+ * Convert XP -> ZENI (record in DB, on-chain transfer via Treasury later)
  */
 export async function POST(req: NextRequest) {
   try {
+    const clientIp = req.headers.get("x-forwarded-for") || "unknown";
+    if (!checkRateLimit(clientIp)) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const apiKey = req.headers.get("x-api-key");
-    if (apiKey !== process.env.ZENI_API_KEY) {
+    if (!process.env.ZENI_API_KEY || apiKey !== process.env.ZENI_API_KEY) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { user_id, platform, xp_amount } = await req.json();
+    const body = await req.json();
+    const { user_id, platform, xp_amount } = body;
 
-    if (!user_id || !platform || !xp_amount) {
+    // Validate inputs
+    if (!user_id || !platform || xp_amount === undefined) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    if (typeof xp_amount !== "number" || xp_amount <= 0 || xp_amount > 10_000_000 || !Number.isInteger(xp_amount)) {
+      return NextResponse.json({ error: "Invalid xp_amount" }, { status: 400 });
     }
 
     const rate = XP_RATES[platform];
     if (!rate) {
       return NextResponse.json({ error: "Invalid platform" }, { status: 400 });
     }
+
+    const safeUserId = String(user_id).substring(0, 36);
 
     // Calculate ZENI amount
     const zeniAmount = Math.floor(xp_amount / rate);
@@ -37,8 +59,8 @@ export async function POST(req: NextRequest) {
     // Check user has enough XP
     const { data: balance } = await supabaseAdmin
       .from("zeni_xp_balances")
-      .select("xp_balance")
-      .eq("user_id", user_id)
+      .select("xp_balance, total_converted")
+      .eq("user_id", safeUserId)
       .eq("platform", platform)
       .single();
 
@@ -46,11 +68,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Insufficient XP balance" }, { status: 400 });
     }
 
-    // Get user wallet address
+    // Get user wallet
     const { data: wallet } = await supabaseAdmin
       .from("zeni_wallets")
       .select("address")
-      .eq("user_id", user_id)
+      .eq("user_id", safeUserId)
       .eq("is_primary", true)
       .single();
 
@@ -58,63 +80,46 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No wallet connected" }, { status: 400 });
     }
 
-    // Execute on-chain transfer from Treasury
-    const provider = new ethers.JsonRpcProvider(POLYGON_RPC);
-    const signer = new ethers.Wallet(process.env.DEPLOYER_PRIVATE_KEY || "", provider);
-    const zeniToken = new ethers.Contract(
-      ZENI_TOKEN,
-      ["function transfer(address,uint256) returns (bool)"],
-      signer
-    );
-
-    const weiAmount = ethers.parseEther(zeniAmount.toString());
-
-    // Note: In production, this should call ZeniTreasury.spendFromSubsidiary()
-    // For now, direct transfer from deployer (which has 0 ZENI — need treasury integration)
-    // TODO: Integrate with ZeniTreasury contract for proper pool management
-
-    // Deduct XP
+    // Deduct XP atomically
     const xpUsed = zeniAmount * rate;
     await supabaseAdmin
       .from("zeni_xp_balances")
       .update({
         xp_balance: balance.xp_balance - xpUsed,
-        total_converted: (balance.xp_balance || 0) + xpUsed,
+        total_converted: (balance.total_converted || 0) + xpUsed,
         updated_at: new Date().toISOString(),
       })
-      .eq("user_id", user_id)
+      .eq("user_id", safeUserId)
       .eq("platform", platform);
 
-    // Record XP transaction (negative)
+    // Record XP spend transaction
     await supabaseAdmin.from("zeni_xp_transactions").insert({
-      user_id,
+      user_id: safeUserId,
       platform,
       xp_amount: -xpUsed,
       action: "convert_to_zeni",
-      description: `Converted ${xpUsed} XP → ${zeniAmount} ZENI`,
+      description: `Converted ${xpUsed} XP to ${zeniAmount} ZENI`,
     });
 
-    // Record ZENI transaction
+    // Record ZENI transaction (pending on-chain)
     await supabaseAdmin.from("zeni_token_transactions").insert({
-      user_id,
+      user_id: safeUserId,
       from_address: "treasury",
       to_address: wallet.address,
       amount: zeniAmount,
       tx_type: "xp_conversion",
       status: "pending",
-      description: `XP→ZENI: ${xpUsed} XP = ${zeniAmount} ZENI (${platform})`,
+      description: `XP conversion: ${xpUsed} XP = ${zeniAmount} ZENI (${platform})`,
     });
 
     return NextResponse.json({
       success: true,
       xp_used: xpUsed,
       zeni_amount: zeniAmount,
-      zeni_usd: (zeniAmount * 0.05).toFixed(2),
-      rate: `${rate} XP = 1 ZENI`,
-      wallet: wallet.address,
       status: "pending",
     });
-  } catch (err) {
+  } catch {
+    console.error("[XP_CONVERT] Unexpected error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

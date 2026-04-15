@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import "@nomicfoundation/hardhat-verify";
 dotenv.config();
 
 /** @type {import('hardhat/config').HardhatUserConfig} */
@@ -16,5 +17,19 @@ export default {
       accounts: process.env.DEPLOYER_PRIVATE_KEY ? [process.env.DEPLOYER_PRIVATE_KEY] : [],
       chainId: 80002,
     },
+    polygon: {
+      type: "http",
+      url: process.env.POLYGON_RPC || "https://polygon-bor-rpc.publicnode.com",
+      accounts: process.env.DEPLOYER_PRIVATE_KEY ? [process.env.DEPLOYER_PRIVATE_KEY] : [],
+      chainId: 137,
+    },
+  },
+  etherscan: {
+    apiKey: {
+      polygon: process.env.POLYGONSCAN_API_KEY || "",
+    },
+  },
+  sourcify: {
+    enabled: true,
   },
 };

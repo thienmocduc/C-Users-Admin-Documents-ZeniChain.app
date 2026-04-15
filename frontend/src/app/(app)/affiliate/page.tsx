@@ -1,159 +1,172 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useAccount } from "wagmi";
+import { useAffiliateData, useAffiliateStats } from "@/hooks/useOnChain";
 
-const incomeRows = [
-  { label: "F1 Truc tiep", amount: "1.2M", pct: 46, color: "var(--c4)" },
-  { label: "Revenue Sharing", amount: "480K", pct: 18, color: "var(--c5)" },
-  { label: "Pro Ref", amount: "320K", pct: 12, color: "var(--c6b)" },
-  { label: "KTV Ref", amount: "180K", pct: 7, color: "var(--c7)" },
-  { label: "Pool", amount: "420K", pct: 16, color: "var(--gold)" },
-];
+function formatZeni(val: string | number): string {
+  const n = Number(val);
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + "M";
+  if (n >= 1_000) return (n / 1_000).toFixed(1) + "K";
+  return n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+}
 
-const filters = ["All", "F1", "Group", "Pro", "KTV", "Pool"];
-
-const commissionHistory = [
-  { icon: "💰", bg: "rgba(0,212,170,0.12)", name: "F1 - Don #A4821 - Le Minh", meta: "11/04 14:23", amount: "+750 Zeni", color: "var(--c4)", status: "Released", statusClass: "status-released" },
-  { icon: "👥", bg: "rgba(107,33,240,0.12)", name: "Revenue sharing - Tran Linh", meta: "11/04 10:00", amount: "+320 Zeni", color: "var(--c4)", status: "Released", statusClass: "status-released" },
-  { icon: "⏳", bg: "rgba(245,158,11,0.12)", name: "KTV Fee ref - Nguyen Hoa", meta: "02/04", amount: "+3,000 Zeni", color: "var(--gold)", status: "Escrow", statusClass: "status-escrow" },
-  { icon: "🏆", bg: "rgba(74,141,255,0.12)", name: "Pool Dai Su T3/2026", meta: "05/04", amount: "+2,100 Zeni", color: "var(--c4)", status: "Released", statusClass: "status-released" },
-  { icon: "👤", bg: "rgba(0,212,170,0.12)", name: "Pro ref - Hoang Nam", meta: "01/04", amount: "+110 Zeni", color: "var(--c4)", status: "Released", statusClass: "status-released" },
-];
+const COMM_TYPE_LABELS: Record<string, string> = {
+  f1_direct: "Hoa hong F1",
+  group_income: "Revenue Sharing",
+  pro_fee_referral: "Gioi thieu Pro",
+  ktv_fee_referral: "Gioi thieu KTV",
+  ambassador_pool: "Pool Dai Su",
+};
 
 export default function AffiliatePage() {
-  const [activeFilter, setActiveFilter] = useState("All");
-  const { t } = useTranslation();
+  const [filter, setFilter] = useState<"all" | "released" | "escrow">("all");
+  const { address, isConnected } = useAccount();
+  const { data: userData, isLoading } = useAffiliateData(address);
+  const { data: globalStats } = useAffiliateStats();
+
+  const commissions = userData?.userCommissions ?? [];
+  const filtered = commissions.filter((c) => {
+    if (filter === "released") return c.released;
+    if (filter === "escrow") return !c.released && !c.clawedBack;
+    return true;
+  });
 
   return (
-    <div className="page-grid">
-      {/* ═══ LEFT COLUMN ═══ */}
-      <div>
-        {/* Rank Hero */}
-        <div className="rank-hero">
-          <div style={{ fontSize: 11, color: "rgba(240,244,255,0.4)", letterSpacing: 2, textTransform: "uppercase", fontFamily: "var(--font-mono)", marginBottom: 8 }}>
-            {t('dash_rank_title')}
+    <div>
+      <div className="section-title">Affiliate</div>
+
+      {/* Not connected */}
+      {!isConnected && (
+        <div className="card" style={{ textAlign: "center", padding: 32 }}>
+          <div style={{ fontSize: 40, marginBottom: 12 }}>🤝</div>
+          <div style={{ fontSize: 15, fontWeight: 600, color: "var(--white)", marginBottom: 6 }}>
+            Ket noi wallet de xem hoa hong
           </div>
-          <div style={{ fontSize: 42, marginBottom: 4 }}>👑</div>
-          <div className="rank-name" style={{ fontSize: 26 }}>KOC Pro</div>
-          <div className="rank-sub">Tra phi 19$/thang &middot; Het han 11/05/2026</div>
-          <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
-            <span className="rank-pill">F1 30%</span>
-            <span className="rank-pill">Group 20%</span>
-            <span className="rank-pill" style={{ color: "var(--c4)", borderColor: "rgba(0,212,170,0.25)", background: "rgba(0,212,170,0.1)" }}>GMV 45.2tr</span>
+          <div style={{ fontSize: 12, color: "var(--dim)" }}>
+            Affiliate commission duoc luu on-chain minh bach 100%
           </div>
         </div>
+      )}
 
-        {/* Affiliate Code */}
-        <div className="aff-code-wrap">
-          <div className="aff-code-label">{t('affiliate_code')}</div>
-          <div className="aff-code-text">ANIMA-DUC-4821</div>
-          <button className="btn btn-secondary" style={{ marginTop: 12, width: "100%", justifyContent: "center", fontSize: 12 }}>
-            {t('copy_link')}
-          </button>
+      {/* Global Stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 20 }}>
+        <div className="kpi-card">
+          <div className="kpi-label">Total Escrow</div>
+          <div className="kpi-value" style={{ color: "var(--gold)" }}>
+            {globalStats ? formatZeni(globalStats.totalEscrow) : "---"}
+          </div>
         </div>
-
-        {/* Team Stats */}
-        <div className="card">
-          <div className="card-title">{t('aff_team')}</div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
-            <div className="stat-mini">
-              <div className="stat-mini-label">{t('aff_total_f1')}</div>
-              <div className="stat-mini-value" style={{ fontSize: 20 }}>12</div>
-              <div className="stat-mini-sub">8 active</div>
-            </div>
-            <div className="stat-mini">
-              <div className="stat-mini-label">STREAK</div>
-              <div className="stat-mini-value" style={{ fontSize: 20 }}>14</div>
-              <div className="stat-mini-sub" style={{ color: "var(--c4)" }}>+2% F1 bonus</div>
-            </div>
+        <div className="kpi-card">
+          <div className="kpi-label">Total Released</div>
+          <div className="kpi-value" style={{ color: "var(--c4)" }}>
+            {globalStats ? formatZeni(globalStats.totalReleased) : "---"}
           </div>
-
-          {/* Ambassador Progress */}
-          <div style={{ fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: "var(--dim)", fontFamily: "var(--font-mono)", marginBottom: 10 }}>
-            {t('dash_progress_title')}
-          </div>
-          {[
-            { label: "Team A GMV", val: "180tr / 250tr", pct: 72, color: "var(--c6b)" },
-            { label: "Team B GMV", val: "95tr / 250tr", pct: 38, color: "var(--c5)" },
-          ].map((p) => (
-            <div key={p.label} style={{ marginBottom: 12 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5, fontSize: 12 }}>
-                <span style={{ color: "var(--muted)" }}>{p.label}</span>
-                <span style={{ fontFamily: "var(--font-mono)", color: "var(--white)" }}>{p.val}</span>
-              </div>
-              <div className="prog-track">
-                <div className="prog-fill" style={{ width: `${p.pct}%`, background: p.color }} />
-              </div>
-            </div>
-          ))}
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-label">Total Commissions</div>
+          <div className="kpi-value">{globalStats?.commissionCount ?? "---"}</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-label">Escrow Days</div>
+          <div className="kpi-value">{globalStats?.escrowDays ?? "---"}</div>
         </div>
       </div>
 
-      {/* ═══ RIGHT COLUMN ═══ */}
-      <div>
-        {/* Escrow Banner */}
-        <div className="escrow-banner">
-          <span style={{ fontSize: 20 }}>⏳</span>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--gold)" }}>850K Zeni dang trong escrow</div>
-            <div style={{ fontSize: 11, color: "var(--dim)" }}>{t('escrow_sub')}</div>
-          </div>
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--gold)", flexShrink: 0 }}>Release: 20/04</div>
-        </div>
-
-        {/* Monthly Income Breakdown */}
+      {/* User Commissions */}
+      {isConnected && (
         <div className="card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <div className="card-title" style={{ marginBottom: 0 }}>{t('aff_income_title')}</div>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 16, fontWeight: 700, color: "var(--white)" }}>2.6M</span>
+          <div className="card-title">
+            YOUR COMMISSIONS {isLoading && "(Loading...)"}
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {incomeRows.map((row) => (
-              <div key={row.label} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 6, height: 6, borderRadius: 3, background: row.color, flexShrink: 0 }} />
-                <span style={{ fontSize: 12, color: "var(--muted)", flex: 1, minWidth: 0 }}>{row.label}</span>
-                <div style={{ width: 100, flexShrink: 0 }}>
-                  <div className="prog-track" style={{ height: 5 }}>
-                    <div className="prog-fill" style={{ width: `${row.pct}%`, background: row.color }} />
-                  </div>
-                </div>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 600, color: "var(--white)", width: 60, textAlign: "right", flexShrink: 0 }}>{row.amount}</span>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Commission History */}
-        <div className="card">
-          <div className="card-title">{t('aff_commission_history')}</div>
-          <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
-            {filters.map((f) => (
+          {/* Filter chips */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+            {(["all", "released", "escrow"] as const).map((f) => (
               <button
                 key={f}
-                className={`filter-chip ${activeFilter === f ? "active" : ""}`}
-                onClick={() => setActiveFilter(f)}
+                className={`filter-chip ${filter === f ? "active" : ""}`}
+                onClick={() => setFilter(f)}
               >
-                {f}
+                {f === "all" ? "Tat ca" : f === "released" ? "Da nhan" : "Escrow"}
               </button>
             ))}
           </div>
-          {commissionHistory.map((tx, i) => (
-            <div className="tx-item" key={i}>
-              <div className="tx-icon" style={{ background: tx.bg }}>{tx.icon}</div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div className="tx-name" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{tx.name}</div>
-                <div className="tx-meta" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span>{tx.meta}</span>
-                  <span className={`status-tag ${tx.statusClass}`}>{tx.status}</span>
+
+          {filtered.length === 0 ? (
+            <div style={{ textAlign: "center", padding: 24, color: "var(--dim)" }}>
+              {isLoading ? "Dang tai du lieu tu blockchain..." : "Chua co commission nao"}
+            </div>
+          ) : (
+            filtered.map((c) => (
+              <div className="tx-item" key={c.id}>
+                <div
+                  className="tx-icon"
+                  style={{
+                    background: c.released
+                      ? "rgba(0,212,170,0.12)"
+                      : c.clawedBack
+                      ? "rgba(224,82,82,0.12)"
+                      : "rgba(245,158,11,0.12)",
+                  }}
+                >
+                  {c.released ? "💰" : c.clawedBack ? "↩" : "⏳"}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="tx-name">
+                    {COMM_TYPE_LABELS[c.commissionType] ?? c.commissionType}
+                  </div>
+                  <div className="tx-meta" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span>{c.subsidiary}</span>
+                    <span
+                      className={`status-tag ${
+                        c.released ? "status-released" : c.clawedBack ? "status-clawback" : "status-escrow"
+                      }`}
+                    >
+                      {c.released ? "Released" : c.clawedBack ? "Clawback" : "Escrow"}
+                    </span>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    textAlign: "right",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: c.released ? "var(--c4)" : "var(--gold)",
+                    flexShrink: 0,
+                  }}
+                >
+                  +{formatZeni(c.amount)} ZENI
                 </div>
               </div>
-              <div style={{ textAlign: "right", fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 600, color: tx.color, flexShrink: 0 }}>
-                {tx.amount}
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
+      )}
+
+      {/* Escrow Info */}
+      <div className="card">
+        <div className="card-title">HOW ESCROW WORKS</div>
+        <div className="escrow-banner">
+          <span style={{ fontSize: 20, flexShrink: 0 }}>⏳</span>
+          <div style={{ fontSize: 13, color: "var(--white)" }}>
+            Moi commission duoc hold trong smart contract {globalStats?.escrowDays ?? 7} ngay.
+            Sau {globalStats?.escrowDays ?? 7} ngay, bat ky ai cung co the goi release.
+            Admin co the clawback truoc khi release neu co gian lan.
+          </div>
+        </div>
+        {[
+          { key: "Contract", val: "0x1d59...0714", cls: "purple" },
+          { key: "Escrow Period", val: `${globalStats?.escrowDays ?? 7} days` },
+          { key: "On-chain", val: "Polygon Mainnet", cls: "green" },
+          { key: "Transparency", val: "100% verifiable on Polygonscan" },
+        ].map((row) => (
+          <div key={row.key} className="chain-info-row">
+            <span className="cir-key">{row.key}</span>
+            <span className={`cir-val ${row.cls ?? ""}`}>{row.val}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -15,23 +15,30 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     if (!emailOrPhone || !password) {
       setError("Vui lòng nhập email/SĐT và mật khẩu.");
       return;
     }
+    if (password.length < 6) {
+      setError("Mật khẩu tối thiểu 6 ký tự.");
+      return;
+    }
     setLoading(true);
-    setTimeout(() => {
-      const success = login(emailOrPhone, password);
+    try {
+      const success = await login(emailOrPhone, password);
       if (success) {
         router.push("/dashboard");
       } else {
-        setError("Sai email/SĐT hoặc mật khẩu. Vui lòng thử lại.");
+        setError("Đăng nhập thất bại. Vui lòng thử lại.");
         setLoading(false);
       }
-    }, 400);
+    } catch {
+      setError("Lỗi hệ thống. Vui lòng thử lại sau.");
+      setLoading(false);
+    }
   }
 
   function handleDemo() {
@@ -148,7 +155,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Demo hint */}
+        {/* Powered by */}
         <div
           className="mt-4 rounded-[14px] px-4 py-3 text-center text-[11px]"
           style={{
@@ -158,7 +165,7 @@ export default function LoginPage() {
             backdropFilter: "blur(12px)",
           }}
         >
-          💡 Demo: duc@zeni.holdings / Zeni@2026
+          Powered by Polygon · Secured by Supabase
         </div>
       </div>
     </div>

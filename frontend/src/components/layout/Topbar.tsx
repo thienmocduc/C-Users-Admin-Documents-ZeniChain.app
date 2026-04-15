@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { useSidebarStore } from "@/stores/useSidebarStore";
 import { useLocaleStore } from "@/stores/useLocaleStore";
+import { ConnectWallet } from "@/components/ui/ConnectWallet";
 import type { Locale } from "@/lib/i18n";
 
 const LANGUAGES = [
@@ -143,6 +144,9 @@ export function Topbar({ title = "Dashboard" }: TopbarProps) {
         )}
       </div>
 
+      {/* Connect Wallet */}
+      <ConnectWallet />
+
       {/* Theme toggle */}
       {mounted && (
         <button
@@ -152,6 +156,9 @@ export function Topbar({ title = "Dashboard" }: TopbarProps) {
           {theme === "dark" ? "🌙" : "☀️"}
         </button>
       )}
+
+      {/* Connect Wallet */}
+      <ConnectWallet />
 
       {/* Notification bell */}
       <button

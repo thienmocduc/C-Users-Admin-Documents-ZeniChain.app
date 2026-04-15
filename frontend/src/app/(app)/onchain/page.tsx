@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import {
   ZENI_TOKEN, TREASURY_CONTRACT, DEPLOYER_ADDRESS, BADGE_CONTRACT, AFFILIATE_CONTRACT,
+  VESTING_CONTRACT, VOUCHER_CONTRACT,
   ZENI_PRICE_USD, POLYGON_RPC,
 } from "@/lib/contracts";
 
@@ -29,6 +30,8 @@ const CONTRACTS_LIST = [
   { name: "ZeniTreasury", address: TREASURY_CONTRACT, status: "Live" },
   { name: "AffiliateCommission", address: AFFILIATE_CONTRACT, status: "Live" },
   { name: "ZeniBadge (SBT)", address: BADGE_CONTRACT, status: "Live" },
+  { name: "VestingContract", address: VESTING_CONTRACT, status: "Live" },
+  { name: "VoucherNFT (ERC-721)", address: VOUCHER_CONTRACT, status: "Live" },
 ];
 
 function formatZeni(wei: string): string {

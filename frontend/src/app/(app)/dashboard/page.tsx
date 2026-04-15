@@ -1,7 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useAccount } from "wagmi";
+import { useZeniBalance, useAffiliateStats, useBadgeStats } from "@/hooks/useOnChain";
+import { ZENI_PRICE_USD } from "@/lib/contracts";
+
+function formatNum(n: number): string {
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + "M";
+  if (n >= 1_000) return n.toLocaleString();
+  return n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+}
 
 const recentTx = [
   { icon: "💰", bg: "rgba(0,212,170,0.12)", name: "Hoa hong F1 - don #A4821", meta: "Hom nay 14:23", amount: "+750 Zeni", amountColor: "var(--c4)", status: "Released", statusClass: "status-released" },
@@ -11,12 +19,7 @@ const recentTx = [
   { icon: "👤", bg: "rgba(0,212,170,0.12)", name: "Gioi thieu Pro - Tran Linh", meta: "01/04", amount: "+110 Zeni", amountColor: "var(--c4)", status: "Released", statusClass: "status-released" },
 ];
 
-const stats = [
-  { label: "ANIMA XP", value: "48,200", sub: "+350 hom nay", color: "var(--c4)" },
-  { label: "HOA HONG THANG", value: "3.2M", sub: "+18% vs T3", color: "var(--c4)" },
-  { label: "ESCROW", value: "850K", sub: "Release 20/04", color: "var(--gold)" },
-  { label: "NFT VOUCHER", value: "3", sub: "2 active", color: "var(--c5)" },
-];
+// Stats will be computed from on-chain data inside the component
 
 const actions = [
   { icon: "↗", label: "Send" },
@@ -27,6 +30,14 @@ const actions = [
 
 export default function DashboardPage() {
   const { t } = useTranslation();
+  const { address, isConnected } = useAccount();
+  const { data: balanceData, isLoading: balLoading } = useZeniBalance(address);
+  const { data: affStats } = useAffiliateStats();
+  const { data: badgeStats } = useBadgeStats();
+
+  const balance = balanceData ? Number(balanceData.balance) : 0;
+  const usdValue = balance * ZENI_PRICE_USD;
+
   return (
     <div className="page-grid">
       {/* ═══ LEFT COLUMN ═══ */}
@@ -36,12 +47,24 @@ export default function DashboardPage() {
           <div style={{ fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: "var(--dim)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>
             {t('total_assets')}
           </div>
-          <div className="balance-amount">24,850</div>
-          <div className="balance-token">$Zeni Token</div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
-            <span style={{ fontSize: 12, color: "var(--dim)" }}>~ $573 USD</span>
-            <span style={{ fontSize: 12, color: "var(--c4)", fontFamily: "var(--font-mono)" }}>+2.4%</span>
-          </div>
+          {!isConnected ? (
+            <div style={{ padding: "12px 0" }}>
+              <div style={{ fontSize: 28, fontWeight: 700, color: "var(--white)", fontFamily: "var(--font-mono)" }}>---</div>
+              <div style={{ fontSize: 12, color: "var(--dim)", marginTop: 4 }}>Ket noi wallet de xem balance</div>
+            </div>
+          ) : balLoading ? (
+            <div style={{ padding: "12px 0" }}>
+              <div style={{ fontSize: 28, fontWeight: 700, color: "var(--dim)", fontFamily: "var(--font-mono)" }}>Loading...</div>
+            </div>
+          ) : (
+            <>
+              <div className="balance-amount">{formatNum(balance)}</div>
+              <div className="balance-token">$Zeni Token</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+                <span style={{ fontSize: 12, color: "var(--dim)" }}>~ ${usdValue.toLocaleString(undefined, { maximumFractionDigits: 2 })} USD</span>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Action Buttons */}
@@ -54,15 +77,28 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Stats 2x2 */}
+        {/* Stats 2x2 — On-chain data */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-          {stats.map((s) => (
-            <div className="stat-mini" key={s.label}>
-              <div className="stat-mini-label">{s.label}</div>
-              <div className="stat-mini-value">{s.value}</div>
-              <div className="stat-mini-sub" style={{ color: s.color }}>{s.sub}</div>
-            </div>
-          ))}
+          <div className="stat-mini">
+            <div className="stat-mini-label">TOTAL ESCROW</div>
+            <div className="stat-mini-value">{affStats ? formatNum(Number(affStats.totalEscrow)) : "---"}</div>
+            <div className="stat-mini-sub" style={{ color: "var(--gold)" }}>$ZENI in escrow</div>
+          </div>
+          <div className="stat-mini">
+            <div className="stat-mini-label">TOTAL RELEASED</div>
+            <div className="stat-mini-value">{affStats ? formatNum(Number(affStats.totalReleased)) : "---"}</div>
+            <div className="stat-mini-sub" style={{ color: "var(--c4)" }}>$ZENI paid out</div>
+          </div>
+          <div className="stat-mini">
+            <div className="stat-mini-label">COMMISSIONS</div>
+            <div className="stat-mini-value">{affStats?.commissionCount ?? "---"}</div>
+            <div className="stat-mini-sub" style={{ color: "var(--c5)" }}>Total on-chain</div>
+          </div>
+          <div className="stat-mini">
+            <div className="stat-mini-label">NFT BADGES</div>
+            <div className="stat-mini-value">{badgeStats?.totalMinted ?? "---"}</div>
+            <div className="stat-mini-sub" style={{ color: "var(--c6b)" }}>SBT minted</div>
+          </div>
         </div>
       </div>
 

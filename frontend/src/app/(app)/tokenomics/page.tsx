@@ -46,7 +46,9 @@ const contracts = [
   { name: "$ZENI Token (ERC-20)", address: "0x2d0Ec889F3889F0a364b82039db9F8Bef78f5EC1", status: "Live" },
   { name: "AffiliateCommission", address: "0x1d5963FcCfC548275293e51f0F6C7aC482E0b714", status: "Live" },
   { name: "ZeniBadge (SBT)", address: "0xB157c83beEeA7c7ebDB2CEa305135e3deCAeD79D", status: "Live" },
-  { name: "VestingContract", address: "Chưa deploy", status: "Ready" },
+  { name: "ZeniTreasury", address: "0x359E7Bc28023D8f8906D0Fa7c18Ce60E6b5f1448", status: "Live" },
+  { name: "VestingContract", address: "0xD51C4816B5B932fE2dea8DfD082878A9146Ad00a", status: "Live" },
+  { name: "VoucherNFT (ERC-721)", address: "0x64D880F84d1A1212F876eb8F150cdca91857e1DF", status: "Live" },
 ];
 
 const feeStructure = [

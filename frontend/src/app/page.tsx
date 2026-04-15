@@ -1,43 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { CosmicBackground } from "@/components/ui/CosmicBackground";
+import { useEffect, useState } from "react";
 
-/* ═══ SCROLL REVEAL HOOK ═══ */
-function useReveal() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVisible(true); io.disconnect(); } },
-      { threshold: 0.01, rootMargin: "0px 0px 200px 0px" }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return { ref, visible };
-}
 
-/* ═══ ANIMATED COUNTER ═══ */
-function Counter({ end, suffix = "", duration = 2000 }: { end: number; suffix?: string; duration?: number }) {
-  const [val, setVal] = useState(0);
-  const { ref, visible } = useReveal();
-  useEffect(() => {
-    if (!visible) return;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min((now - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - t, 3); // easeOutCubic
-      setVal(Math.round(end * ease));
-      if (t < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [visible, end, duration]);
-  return <span ref={ref}>{val.toLocaleString()}{suffix}</span>;
-}
 
 /* ═══ TYPING TERMINAL ═══ */
 function Terminal() {
@@ -87,24 +53,6 @@ function Terminal() {
   );
 }
 
-/* ═══ REVEAL SECTION WRAPPER ═══ */
-function Reveal({ children, className = "", delay = 0, instant = false }: { children: React.ReactNode; className?: string; delay?: number; instant?: boolean }) {
-  const { ref, visible } = useReveal();
-  const show = instant || visible;
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: show ? 1 : 0,
-        transform: show ? "translateY(0)" : "translateY(30px)",
-        transition: instant ? "none" : `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
 
 /* ═══ MAIN LANDING PAGE ═══ */
 export default function LandingPage() {
@@ -118,7 +66,6 @@ export default function LandingPage() {
 
   return (
     <div className="landing-root">
-      <CosmicBackground />
       {/* ═══ NAVBAR ═══ */}
       <nav className={`land-nav ${scrollY > 50 ? "nav-scrolled" : ""}`}>
         <div className="nav-inner">
@@ -156,14 +103,11 @@ export default function LandingPage() {
         <div className="hero-grid" />
 
         <div className="hero-content">
-          <Reveal instant>
             <div className="hero-badge">
               <span className="badge-dot" />
               <span>Polygon CDK · Live on Mainnet</span>
             </div>
-          </Reveal>
 
-          <Reveal instant>
             <h1 className="hero-title">
               Blockchain cho
               <br />
@@ -171,17 +115,13 @@ export default function LandingPage() {
               <br />
               <span className="hero-region">khu vực ASEAN</span>
             </h1>
-          </Reveal>
 
-          <Reveal instant>
             <p className="hero-desc">
               Nền tảng Web3 duy nhất có real utility từ hệ sinh thái wellness thật.
               <br className="hidden md:block" />
               Kiếm $ZENI từ doanh số thật, không đầu cơ, không farming.
             </p>
-          </Reveal>
 
-          <Reveal instant>
             <div className="hero-cta">
               <Link href="/register" className="btn-hero-primary">
                 <span>Tạo Zeni ID miễn phí</span>
@@ -189,31 +129,27 @@ export default function LandingPage() {
               </Link>
               <Link href="/dashboard" className="btn-hero-secondary">Xem Demo</Link>
             </div>
-          </Reveal>
 
-          <Reveal instant>
+
             <div className="hero-stats-row">
               {[
-                { val: 20, suffix: "M+", label: "$ZENI Staked" },
-                { val: 5500, suffix: "+", label: "KOC Network" },
-                { val: 45, suffix: "tr", label: "GMV / Tháng" },
-                { val: 2, suffix: "s", label: "Finality" },
+                { display: "20M+", label: "$ZENI Staked" },
+                { display: "5,500+", label: "KOC Network" },
+                { display: "45tr", label: "GMV / Tháng" },
+                { display: "2s", label: "Finality" },
               ].map((s) => (
                 <div key={s.label} className="hero-stat">
-                  <div className="hero-stat-val">
-                    <Counter end={s.val} suffix={s.suffix} />
-                  </div>
+                  <div className="hero-stat-val">{s.display}</div>
                   <div className="hero-stat-label">{s.label}</div>
                 </div>
               ))}
             </div>
-          </Reveal>
         </div>
 
         {/* Terminal preview */}
-        <Reveal instant className="hero-terminal-wrap">
+        <div className="hero-terminal-wrap">
           <Terminal />
-        </Reveal>
+        </div>
       </section>
 
       {/* ═══ FEATURES / WHY ═══ */}

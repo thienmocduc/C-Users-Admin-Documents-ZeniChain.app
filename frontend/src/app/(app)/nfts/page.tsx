@@ -1,62 +1,70 @@
 "use client";
 
-const badges = [
-  { emoji: "\u{1F3C5}", name: "KOC Pro", id: "#SBT-0421", owned: true },
-  { emoji: "\u{1F91D}", name: "First Referral", id: "#SBT-0001", owned: true },
-  { emoji: "\u{1F525}", name: "7-Day Streak", id: "#SBT-0142", owned: true },
-  { emoji: "\u{1F31F}", name: "Pioneer", id: "#SBT-0003", owned: true },
-  { emoji: "\u{1F48E}", name: "Diamond", id: "#SBT-???", owned: false },
-  { emoji: "\u{1F4E6}", name: "100 Orders", id: "#SBT-???", owned: false },
-  { emoji: "\u{1F3C6}", name: "Top GMV", id: "#SBT-???", owned: false },
-  { emoji: "\u{1F5F3}", name: "Governance", id: "#SBT-???", owned: false },
-];
+import { useAccount } from "wagmi";
+import { useUserBadges, useBadgeStats } from "@/hooks/useOnChain";
+import { BADGE_CONTRACT } from "@/lib/contracts";
+
+const BADGE_TYPE_MAP: Record<number, { emoji: string; name: string }> = {
+  0: { emoji: "🏅", name: "KOC Pro" },
+  1: { emoji: "🤝", name: "First Referral" },
+  2: { emoji: "🔥", name: "7-Day Streak" },
+  3: { emoji: "🌟", name: "Pioneer" },
+  4: { emoji: "💎", name: "Diamond" },
+  5: { emoji: "📦", name: "100 Orders" },
+  6: { emoji: "🏆", name: "Top GMV" },
+  7: { emoji: "🗳", name: "Governance" },
+};
+
+const ALL_BADGE_TYPES = [0, 1, 2, 3, 4, 5, 6, 7];
 
 export default function NftsPage() {
+  const { address, isConnected } = useAccount();
+  const { data: userBadgeData, isLoading } = useUserBadges(address);
+  const { data: globalStats } = useBadgeStats();
+
+  const ownedTypes = new Set(userBadgeData?.badges.map((b) => b.badgeType) ?? []);
+  const totalOwned = userBadgeData?.totalOwned ?? 0;
+  const shortContract = `${BADGE_CONTRACT.slice(0, 6)}...${BADGE_CONTRACT.slice(-4)}`;
+
   return (
     <div>
       <div className="section-title">NFT Badges</div>
 
+      {/* Not connected state */}
+      {!isConnected && (
+        <div className="card" style={{ textAlign: "center", padding: 32 }}>
+          <div style={{ fontSize: 40, marginBottom: 12 }}>🔗</div>
+          <div style={{ fontSize: 15, fontWeight: 600, color: "var(--white)", marginBottom: 6 }}>
+            Ket noi wallet de xem badges
+          </div>
+          <div style={{ fontSize: 12, color: "var(--dim)" }}>
+            Click &quot;Connect Wallet&quot; o thanh tren de xem SBT cua ban
+          </div>
+        </div>
+      )}
+
       {/* Milestone SBT */}
       <div className="card">
-        <div className="card-title">Milestone SBT</div>
+        <div className="card-title">
+          Milestone SBT {isConnected && !isLoading && `(${totalOwned} / ${ALL_BADGE_TYPES.length} owned)`}
+          {isLoading && " (Loading...)"}
+        </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
-          {badges.map((b, i) => (
-            <div key={i} className={`badge-item ${b.owned ? "badge-owned" : ""}`}>
-              <div style={{ fontSize: 32, lineHeight: 1 }}>{b.emoji}</div>
-              <div className="badge-name">{b.name}</div>
-              <div className={`badge-id ${b.owned ? "owned" : "locked"}`}>
-                {b.owned ? b.id : "\u{1F512} Locked"}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+          {ALL_BADGE_TYPES.map((type) => {
+            const info = BADGE_TYPE_MAP[type] ?? { emoji: "❓", name: `Badge #${type}` };
+            const owned = isConnected ? ownedTypes.has(type) : false;
+            const badge = userBadgeData?.badges.find((b) => b.badgeType === type);
 
-      {/* Streak System */}
-      <div className="card">
-        <div className="card-title">Streak System</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-          <div className="stat-mini" style={{ flex: 1, minWidth: 160 }}>
-            <div className="stat-mini-label">Current Streak</div>
-            <div className="stat-mini-value" style={{ color: "var(--gold)" }}>
-              14 <span style={{ fontSize: 14, color: "var(--dim)" }}>days</span>
-            </div>
-            <div className="stat-mini-sub">{"\u{1F525}"} Keep going!</div>
-          </div>
-          <div className="stat-mini" style={{ flex: 1, minWidth: 160 }}>
-            <div className="stat-mini-label">Next Reward</div>
-            <div className="stat-mini-value" style={{ color: "var(--c4)" }}>30</div>
-            <div className="stat-mini-sub">16 days remaining</div>
-          </div>
-        </div>
-        <div style={{ marginTop: 14 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, marginBottom: 4 }}>
-            <span style={{ color: "var(--muted)" }}>Progress to 30-day badge</span>
-            <span style={{ fontFamily: "var(--font-mono)", color: "var(--c6b)" }}>14 / 30</span>
-          </div>
-          <div className="prog-track">
-            <div className="prog-fill" style={{ width: "46.7%", background: "linear-gradient(90deg, var(--c6), var(--c4))" }} />
-          </div>
+            return (
+              <div key={type} className={`badge-item ${owned ? "badge-owned" : ""}`}>
+                <div style={{ fontSize: 32, lineHeight: 1 }}>{info.emoji}</div>
+                <div className="badge-name">{info.name}</div>
+                <div className={`badge-id ${owned ? "owned" : "locked"}`}>
+                  {owned ? `#SBT-${String(badge?.tokenId ?? type).padStart(4, "0")}` : "🔒 Locked"}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -66,9 +74,10 @@ export default function NftsPage() {
         {[
           { key: "Token Standard", val: "ERC-721 SBT" },
           { key: "Network", val: "Polygon Mainnet" },
-          { key: "Contract", val: "0xB157...D79D", mono: true },
+          { key: "Contract", val: shortContract, mono: true },
           { key: "Transferable", val: "No (Soul-bound)" },
-          { key: "Owned", val: "4 / 8 badges" },
+          { key: "Total Minted (global)", val: globalStats ? String(globalStats.totalMinted) : "Loading..." },
+          { key: "Your Badges", val: isConnected ? `${totalOwned} / ${ALL_BADGE_TYPES.length}` : "Not connected" },
         ].map((row) => (
           <div key={row.key} className="chain-info-row">
             <span className="cir-key">{row.key}</span>
